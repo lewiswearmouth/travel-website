@@ -13,19 +13,15 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 // or "gemini-1.5-pro" if you later want more reasoning power
 
 app.post("/api/insight", async (req, res) => {
-    const { origin, destination } = req.body;
+    const { origin, destination, distance } = req.body;
     try {
         const prompt = `
-      Create a short, vivid, travel summary for a flight from ${origin} to ${destination}.
-      Mention aviation efficiency or sustainability in one line, connecting to Rolls-Royce’s innovation themes.
+      Create a short narrative for a flight from ${origin} to ${destination}, distance ${distance} miles.
+      Mention sustainability or Rolls-Royce innovation once.
     `;
-
         const result = await model.generateContent(prompt);
-        const text = result.response.text();
-
-        res.json({ summary: text });
+        res.json({ summary: result.response.text() });
     } catch (err) {
-        console.error(err);
         res.status(500).json({ error: "Gemini generation failed" });
     }
 });
