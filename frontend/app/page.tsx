@@ -47,7 +47,7 @@ export default function Home() {
       <form onSubmit={handleSubmit} className="flex gap-2 mb-6 bg-slate-800 p-4 rounded-xl shadow-lg">
         <input
           type="text"
-          placeholder="Origin (e.g., TPA)"
+          placeholder="Origin (e.g., IAD)"
           value={form.origin}
           onChange={(e) => setForm({ ...form, origin: e.target.value.toUpperCase() })}
           className="p-2 rounded text-black"
@@ -55,7 +55,7 @@ export default function Home() {
         />
         <input
           type="text"
-          placeholder="Destination (e.g., HND)"
+          placeholder="Destination (e.g., LHR)"
           value={form.destination}
           onChange={(e) => setForm({ ...form, destination: e.target.value.toUpperCase() })}
           className="p-2 rounded text-black"
