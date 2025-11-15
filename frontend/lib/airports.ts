@@ -1,34 +1,38 @@
-export const IATA: Record<string, [number, number]> = {
-    LHR: [-0.4543, 51.4700],     // London
-    BCN: [2.0785, 41.2974],      // Barcelona
-    IAD: [-77.4565, 38.9531],    // DC
-    EDI: [-3.3615, 55.9508],     // Edinburgh
-    EZE: [-58.5358, -34.8222],   // Buenos Aires
-    SCL: [-70.7858, -33.3930],   // Santiago
-    LIM: [-77.1143, -12.0219],   // Lima
-    MVD: [-56.0263, -34.8311],   // Montevideo
-    SJU: [-66.0018, 18.4394],    // San Juan (Puerto Rico)
-    CDG: [2.5670, 49.0097],      // Paris (Charles de Gaulle)
-    ZAG: [16.0615, 45.7429],     // Zagreb
-    VCE: [12.3519, 45.5053],     // Venice
-    BZO: [11.3264, 46.4603],     // Bolzano (Italy)
-    HAN: [105.8042, 21.2212],    // Hanoi (Noi Bai)
-    ORD: [-87.9048, 41.9742],    // Chicago (O'Hare)
-    BKK: [100.7501, 13.6900],    // Bangkok (Suvarnabhumi)
-    BOS: [-71.0052, 42.3656],    // Boston (Logan)
-    PHL: [-75.2411, 39.8729],    // Philadelphia
-    LJU: [14.4576, 46.2237],     // Ljubljana
-    SEA: [-122.3088, 47.4502],   // Seattle
-    NCE: [7.2159, 43.6584],      // Monaco (via Nice Airport)
-    BNA: [-86.6782, 36.1263],    // Nashville
-    AQP: [-71.3440, -16.3411],   // Arequipa
-    SDF: [-85.7360, 38.1744],    // Louisville
-    PNH: [104.8440, 11.5466],    // Phnom Penh
-    MRS: [5.2214, 43.4393],      // Marseille
-    SGN: [106.6620, 10.8185],    // Ho Chi Minh City
-    CUZ: [-71.9410, -13.5357],   // Cusco
-    JLP: [7.1250, 43.5357],      // Antibes (via Cannes–Mandelieu)
-    DAD: [108.1990, 16.0439],    // Hoi An (via Da Nang)
-    ADX: [-2.8684, 56.3729],     // St. Andrews (Leuchars Airport)
-    REP: [103.8130, 13.4120],    // Siem Reap (Angkor)
+export const AIRPORTS: Record<
+    string,
+    { coords: [number, number]; name: string }
+> = {
+    LHR: { coords: [-0.4543, 51.4700], name: "London Heathrow Airport" },
+    BCN: { coords: [2.0785, 41.2974], name: "Barcelona-El Prat Airport" },
+    IAD: { coords: [-77.4565, 38.9531], name: "Washington Dulles International Airport" },
+    EDI: { coords: [-3.3615, 55.9508], name: "Edinburgh Airport" },
+    EZE: { coords: [-58.5358, -34.8222], name: "Buenos Aires Ministro Pistarini (Ezeiza) Airport" },
+    SCL: { coords: [-70.7858, -33.3930], name: "Santiago International Airport (SCL)" },
+    LIM: { coords: [-77.1143, -12.0219], name: "Lima Jorge Chávez International Airport" },
+    MVD: { coords: [-56.0263, -34.8311], name: "Montevideo Carrasco International Airport" },
+    SJU: { coords: [-66.0018, 18.4394], name: "Luis Muñoz Marín International Airport (San Juan)" },
+    CDG: { coords: [2.5670, 49.0097], name: "Paris Charles de Gaulle Airport" },
+    ZAG: { coords: [16.0615, 45.7429], name: "Zagreb Airport" },
+    VCE: { coords: [12.3519, 45.5053], name: "Venice Marco Polo Airport" },
+    BZO: { coords: [11.3264, 46.4603], name: "Bolzano Airport" },
+    HAN: { coords: [105.8042, 21.2212], name: "Hanoi Noi Bai International Airport" },
+    ORD: { coords: [-87.9048, 41.9742], name: "Chicago O'Hare International Airport" },
+    BKK: { coords: [100.7501, 13.6900], name: "Bangkok Suvarnabhumi Airport" },
+    BOS: { coords: [-71.0052, 42.3656], name: "Boston Logan International Airport" },
+    PHL: { coords: [-75.2411, 39.8729], name: "Philadelphia International Airport" },
+    LJU: { coords: [14.4576, 46.2237], name: "Ljubljana Jože Pučnik Airport" },
+    SEA: { coords: [-122.3088, 47.4502], name: "Seattle-Tacoma International Airport" },
+    NCE: { coords: [7.2159, 43.6584], name: "Nice Côte d'Azur Airport (for Monaco)" },
+    BNA: { coords: [-86.6782, 36.1263], name: "Nashville International Airport" },
+    AQP: { coords: [-71.3440, -16.3411], name: "Arequipa Rodríguez Ballón International Airport" },
+    SDF: { coords: [-85.7360, 38.1744], name: "Louisville Muhammad Ali International Airport" },
+    PNH: { coords: [104.8440, 11.5466], name: "Phnom Penh International Airport" },
+    MRS: { coords: [5.2214, 43.4393], name: "Marseille Provence Airport" },
+    SGN: { coords: [106.6620, 10.8185], name: "Ho Chi Minh City Tan Son Nhat Airport" },
+    CUZ: { coords: [-71.9410, -13.5357], name: "Cusco Alejandro Velasco Astete International Airport" },
+    JLP: { coords: [7.1250, 43.5357], name: "Cannes–Mandelieu Airport (for Antibes)" },
+    DAD: { coords: [108.1990, 16.0439], name: "Da Nang International Airport (for Hoi An)" },
+    ADX: { coords: [-2.8684, 56.3729], name: "RAF Leuchars / St Andrews" },
+    REP: { coords: [103.8130, 13.4120], name: "Siem Reap Angkor International Airport" },
+    IND: { coords: [-86.2944, 39.7173], name: "Indianapolis International Airport" },
 };
