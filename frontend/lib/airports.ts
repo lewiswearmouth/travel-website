@@ -6,7 +6,6 @@ export const AIRPORTS: Record<
     // NORTH AMERICA ---------------------------
     IAD: { coords: [-77.4565, 38.9531], name: "Washington Dulles International Airport" },
     ORD: { coords: [-87.9048, 41.9742], name: "Chicago O'Hare International Airport" },
-    BOS: { coords: [-71.0052, 42.3656], name: "Boston Logan International Airport" },
     PHL: { coords: [-75.2411, 39.8729], name: "Philadelphia International Airport" },
     SEA: { coords: [-122.3088, 47.4502], name: "Seattle-Tacoma International Airport" },
     BNA: { coords: [-86.6782, 36.1263], name: "Nashville International Airport" },
