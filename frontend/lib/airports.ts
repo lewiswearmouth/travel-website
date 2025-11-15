@@ -32,11 +32,10 @@ export const AIRPORTS: Record<
     BZO: { coords: [11.3264, 46.4603], name: "Bolzano Airport" },
     LJU: { coords: [14.4576, 46.2237], name: "Ljubljana Jože Pučnik Airport" },
     NCE: { coords: [7.2159, 43.6584], name: "Nice Côte d'Azur Airport (for Monaco)" },
-    JLP: { coords: [7.1250, 43.5357], name: "Cannes-Mandelieu Airport (for Antibes)" },
     ADX: { coords: [-2.8684, 56.3729], name: "RAF Leuchars / St Andrews" },
     MRS: { coords: [5.2214, 43.4393], name: "Marseille Provence Airport" },
 
-    // SOUTHEAST ASIA --------------------------
+    // SOUTHEAST ASIA -------------------------
     HAN: { coords: [105.8042, 21.2212], name: "Hanoi Noi Bai International Airport" },
     BKK: { coords: [100.7501, 13.6900], name: "Bangkok Suvarnabhumi Airport" },
     SGN: { coords: [106.6620, 10.8185], name: "Ho Chi Minh City Tan Son Nhat Airport" },
