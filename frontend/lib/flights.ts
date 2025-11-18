@@ -48,5 +48,4 @@ export const TRIPS = [
     { origin: "IAD", destination: "SDF" }, // DC to Louisville
     { origin: "IND", destination: "SJU" }, // Indianapolis to San Juan
     { origin: "SDF", destination: "SEA" }, // Louisville to San Juan
-
 ];

@@ -17,7 +17,6 @@ const Map = dynamic(() => import('@vis.gl/react-mapbox').then(m => m.Map), {
 export default function Home() {
   const [activeAirport, setActiveAirport] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
-
   const [mapRef, setMapRef] = useState<MapRef | null>(null);
 
   // Build arcs for all flights involving selected airport
@@ -57,10 +56,10 @@ export default function Home() {
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
   return (
-    <main className="flex flex-col items-center min-h-screen bg-slate-950 text-white p-6">
-      <h1 className="text-3xl font-bold mb-4">Travel Map ✈️</h1>
+    <main className="flex flex-col items-center min-h-screen bg-[#0A0F2D] text-[#C0C6D9] p-6">
+      <h1 className="text-3xl font-bold mb-4 text-[#C0C6D9]">Travel Map ✈️</h1>
 
-      <div className="w-full max-w-5xl h-[450px] mb-6 rounded-xl overflow-hidden border border-slate-700">
+      <div className="w-full max-w-5xl h-[450px] mb-6 rounded-xl overflow-hidden border border-[#181D4E]">
         {token ? (
           <Map
             ref={ref => setMapRef(ref)}
@@ -161,8 +160,8 @@ export default function Home() {
                 "line-color": [
                   "case",
                   ["==", ["feature-state", "hover"], true],
-                  "#FFEA00", // yellow
-                  "#00E0FF"  // cyan
+                  "#C0C6D9",
+                  "#42D9F4"
                 ],
                 "line-opacity": 0.9
               }}
