@@ -1,30 +1,19 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// Load environment variables
 dotenv.config();
+
+import optimizeRouter from "./routes/optimize.js";
+
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-// or "gemini-1.5-pro" if you later want more reasoning power
-
-app.post("/api/insight", async (req, res) => {
-    const { origin, destination, distance } = req.body;
-    try {
-        const prompt = `
-      Create a short narrative for a flight from ${origin} to ${destination}, distance ${distance} miles.
-      Mention sustainability or Rolls-Royce innovation once.
-    `;
-        const result = await model.generateContent(prompt);
-        res.json({ summary: result.response.text() });
-    } catch (err) {
-        res.status(500).json({ error: "Gemini generation failed" });
-    }
-});
+// Mount optimizer route
+app.use("/api", optimizeRouter);
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Backend running on ${PORT}`));
+app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
