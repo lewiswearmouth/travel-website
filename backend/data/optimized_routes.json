@@ -1,0 +1,221 @@
+{
+    "optimalAssignments": [
+        {
+            "origin": "IAD",
+            "destination": "EZE",
+            "engine": "Trent 7000",
+            "emissionsKg": 143867
+        },
+        {
+            "origin": "EZE",
+            "destination": "SCL",
+            "engine": "AE 3007",
+            "emissionsKg": 6473
+        },
+        {
+            "origin": "EZE",
+            "destination": "MVD",
+            "engine": "AE 3007",
+            "emissionsKg": null
+        },
+        {
+            "origin": "SCL",
+            "destination": "IAD",
+            "engine": "Trent 7000",
+            "emissionsKg": 137775
+        },
+        {
+            "origin": "SDF",
+            "destination": "LIM",
+            "engine": "Pearl 15",
+            "emissionsKg": 39300
+        },
+        {
+            "origin": "LIM",
+            "destination": "CUZ",
+            "engine": "AE 3007",
+            "emissionsKg": 3333
+        },
+        {
+            "origin": "CUZ",
+            "destination": "AQP",
+            "engine": "AE 3007",
+            "emissionsKg": 1809
+        },
+        {
+            "origin": "AQP",
+            "destination": "LIM",
+            "engine": "AE 3007",
+            "emissionsKg": 4471
+        },
+        {
+            "origin": "IAD",
+            "destination": "BCN",
+            "engine": "Pearl 15",
+            "emissionsKg": 45299
+        },
+        {
+            "origin": "BCN",
+            "destination": "MRS",
+            "engine": "AE 3007",
+            "emissionsKg": 1996
+        },
+        {
+            "origin": "MRS",
+            "destination": "NCE",
+            "engine": "AE 3007",
+            "emissionsKg": null
+        },
+        {
+            "origin": "NCE",
+            "destination": "BZO",
+            "engine": "AE 3007",
+            "emissionsKg": 2554
+        },
+        {
+            "origin": "BZO",
+            "destination": "VCE",
+            "engine": "AE 3007",
+            "emissionsKg": null
+        },
+        {
+            "origin": "VCE",
+            "destination": "LJU",
+            "engine": "AE 3007",
+            "emissionsKg": null
+        },
+        {
+            "origin": "LJU",
+            "destination": "ZAG",
+            "engine": "AE 3007",
+            "emissionsKg": null
+        },
+        {
+            "origin": "ZAG",
+            "destination": "IAD",
+            "engine": "Trent 7000",
+            "emissionsKg": 124004
+        },
+        {
+            "origin": "IAD",
+            "destination": "LHR",
+            "engine": "Pearl 15",
+            "emissionsKg": 41031
+        },
+        {
+            "origin": "LHR",
+            "destination": "EDI",
+            "engine": "AE 3007",
+            "emissionsKg": 3037
+        },
+        {
+            "origin": "EDI",
+            "destination": "ADX",
+            "engine": "AE 3007",
+            "emissionsKg": null
+        },
+        {
+            "origin": "IAD",
+            "destination": "CDG",
+            "engine": "Pearl 15",
+            "emissionsKg": 43088
+        },
+        {
+            "origin": "IAD",
+            "destination": "BKK",
+            "engine": "Trent XWB-84",
+            "emissionsKg": 250540
+        },
+        {
+            "origin": "BKK",
+            "destination": "REP",
+            "engine": "AE 3007",
+            "emissionsKg": 1894
+        },
+        {
+            "origin": "REP",
+            "destination": "PNH",
+            "engine": "AE 3007",
+            "emissionsKg": null
+        },
+        {
+            "origin": "PNH",
+            "destination": "SGN",
+            "engine": "AE 3007",
+            "emissionsKg": null
+        },
+        {
+            "origin": "SGN",
+            "destination": "DAD",
+            "engine": "AE 3007",
+            "emissionsKg": 3436
+        },
+        {
+            "origin": "DAD",
+            "destination": "HAN",
+            "engine": "AE 3007",
+            "emissionsKg": 3578
+        },
+        {
+            "origin": "HAN",
+            "destination": "IAD",
+            "engine": "Trent XWB-84",
+            "emissionsKg": 235622
+        },
+        {
+            "origin": "IAD",
+            "destination": "ORD",
+            "engine": "AE 3007",
+            "emissionsKg": 5375
+        },
+        {
+            "origin": "IAD",
+            "destination": "IND",
+            "engine": "AE 3007",
+            "emissionsKg": 4351
+        },
+        {
+            "origin": "IAD",
+            "destination": "SEA",
+            "engine": "Pearl 15",
+            "emissionsKg": 25729
+        },
+        {
+            "origin": "IAD",
+            "destination": "PHL",
+            "engine": "AE 3007",
+            "emissionsKg": null
+        },
+        {
+            "origin": "IND",
+            "destination": "BNA",
+            "engine": "AE 3007",
+            "emissionsKg": 2281
+        },
+        {
+            "origin": "IAD",
+            "destination": "SDF",
+            "engine": "AE 3007",
+            "emissionsKg": 4124
+        },
+        {
+            "origin": "IND",
+            "destination": "SJU",
+            "engine": "Pearl 15",
+            "emissionsKg": 21301
+        },
+        {
+            "origin": "SDF",
+            "destination": "SEA",
+            "engine": "Pearl 15",
+            "emissionsKg": 21711
+        }
+    ],
+    "totals": {
+        "optimizedTotalEmissionsKg": 969564,
+        "worstCaseTotalEmissionsKg": 1796159,
+        "absoluteReductionKg": 826595,
+        "percentageReduction": 45.91
+    },
+    "insights": []
+}
