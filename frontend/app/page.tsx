@@ -207,7 +207,6 @@ export default function Home() {
                     <div className="text-center space-y-0.5">
                       <div className="font-bold text-sm">{p.origin} → {p.destination}</div>
                       <div>{p.distanceKm} km</div>
-                      <div className="opacity-80">Engine: {p.engine}</div>
                     </div>
                   );
                 })()}
