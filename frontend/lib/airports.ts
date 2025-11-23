@@ -1,8 +1,5 @@
-export const AIRPORTS: Record<
-    string,
-    { coords: [number, number]; name: string }
-> = {
-
+export const AIRPORTS: Record<string, { coords: [number, number]; name: string }> =
+{
     // NORTH AMERICA ---------------------------
     IAD: { coords: [-77.4565, 38.9531], name: "Washington Dulles International Airport" },
     ORD: { coords: [-87.9048, 41.9742], name: "Chicago O'Hare International Airport" },
@@ -10,12 +7,12 @@ export const AIRPORTS: Record<
     SEA: { coords: [-122.3088, 47.4502], name: "Seattle-Tacoma International Airport" },
     BNA: { coords: [-86.6782, 36.1263], name: "Nashville International Airport" },
     SDF: { coords: [-85.7360, 38.1744], name: "Louisville Muhammad Ali International Airport" },
-    SJU: { coords: [-66.0018, 18.4394], name: "Luis Muñoz Marín International Airport (San Juan)" },
+    SJU: { coords: [-66.0018, 18.4394], name: "Luis Muñoz Marín International Airport" },
     IND: { coords: [-86.2944, 39.7173], name: "Indianapolis International Airport" },
 
     // SOUTH AMERICA ---------------------------
-    EZE: { coords: [-58.5358, -34.8222], name: "Buenos Aires Ministro Pistarini (Ezeiza) Airport" },
-    SCL: { coords: [-70.7858, -33.3930], name: "Santiago International Airport (SCL)" },
+    EZE: { coords: [-58.5358, -34.8222], name: "Buenos Aires Ministro Pistarini" },
+    SCL: { coords: [-70.7858, -33.3930], name: "Santiago International Airport" },
     LIM: { coords: [-77.1143, -12.0219], name: "Lima Jorge Chávez International Airport" },
     MVD: { coords: [-56.0263, -34.8311], name: "Montevideo Carrasco International Airport" },
     AQP: { coords: [-71.3440, -16.3411], name: "Arequipa Rodríguez Ballón International Airport" },
@@ -30,7 +27,7 @@ export const AIRPORTS: Record<
     VCE: { coords: [12.3519, 45.5053], name: "Venice Marco Polo Airport" },
     BZO: { coords: [11.3264, 46.4603], name: "Bolzano Airport" },
     LJU: { coords: [14.4576, 46.2237], name: "Ljubljana Jože Pučnik Airport" },
-    NCE: { coords: [7.2159, 43.6584], name: "Nice Côte d'Azur Airport (for Monaco)" },
+    NCE: { coords: [7.2159, 43.6584], name: "Nice Côte d'Azur Airport" },
     ADX: { coords: [-2.8684, 56.3729], name: "RAF Leuchars / St Andrews" },
     MRS: { coords: [5.2214, 43.4393], name: "Marseille Provence Airport" },
 
@@ -40,6 +37,5 @@ export const AIRPORTS: Record<
     SGN: { coords: [106.6620, 10.8185], name: "Ho Chi Minh City Tan Son Nhat Airport" },
     REP: { coords: [103.8130, 13.4120], name: "Siem Reap Angkor International Airport" },
     PNH: { coords: [104.8440, 11.5466], name: "Phnom Penh International Airport" },
-    DAD: { coords: [108.1990, 16.0439], name: "Da Nang International Airport (for Hoi An)" },
-
+    DAD: { coords: [108.1990, 16.0439], name: "Da Nang International Airport" },
 };

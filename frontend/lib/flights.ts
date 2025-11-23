@@ -1,5 +1,3 @@
-// lib/flights.ts
-
 export const TRIPS = [
     // South America
     // December 2024/January 2025 New Years
