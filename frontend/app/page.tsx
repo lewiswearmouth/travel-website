@@ -14,7 +14,7 @@ import { Source, Layer, Marker, MapRef } from '@vis.gl/react-mapbox';
 
 const ENGINE_COLORS: Record<string, string> = {
   "Trent XWB-84": "#4C8AFF",
-  "Trent 7000": "#FF8C42",
+  "RB211-535E4": "#FF8C42",
   "Pearl 15": "#42D77D",
   "AE 3007": "#CC66FF",
 };
@@ -32,7 +32,7 @@ const Map = dynamic(() => import('@vis.gl/react-mapbox').then(m => m.Map), {
 function EngineLegend() {
   const items = [
     { name: "Trent XWB-84", color: "#4C8AFF" },
-    { name: "Trent 7000", color: "#FF8C42" },
+    { name: "RB211-535E4", color: "#FF8C42" },
     { name: "Pearl 15", color: "#42D77D" },
     { name: "AE 3007", color: "#CC66FF" },
   ];
@@ -422,14 +422,14 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-              <div className="opacity-70">Worst Case Emissions</div>
+              <div className="opacity-70">Worst Case Per Passenger Emissions</div>
               <div className="text-lg font-semibold">
                 {optimizerData.totals.worstCaseTotalEmissionsKg?.toLocaleString()} kg CO₂
               </div>
             </div>
 
             <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-              <div className="opacity-70">Optimized Emissions</div>
+              <div className="opacity-70">Optimized Per Passenger Emissions</div>
               <div className="text-lg font-semibold text-green-400">
                 {optimizerData.totals.optimizedTotalEmissionsKg?.toLocaleString()} kg CO₂
               </div>
