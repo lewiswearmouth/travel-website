@@ -3,219 +3,268 @@
         {
             "origin": "IAD",
             "destination": "EZE",
-            "engine": "Trent 7000",
-            "emissionsKg": 143867
+            "distanceKm": 8431,
+            "engine": "Trent XWB-84",
+            "emissionsKg": 365
         },
         {
             "origin": "EZE",
             "destination": "SCL",
+            "distanceKm": 1138,
             "engine": "AE 3007",
-            "emissionsKg": 6473
+            "emissionsKg": 360
         },
         {
             "origin": "EZE",
             "destination": "MVD",
+            "distanceKm": 229,
             "engine": "AE 3007",
-            "emissionsKg": null
+            "emissionsKg": 100
         },
         {
             "origin": "SCL",
             "destination": "IAD",
-            "engine": "Trent 7000",
-            "emissionsKg": 137775
+            "distanceKm": 8074,
+            "engine": "Trent XWB-84",
+            "emissionsKg": 350
         },
         {
             "origin": "SDF",
             "destination": "LIM",
-            "engine": "Pearl 15",
-            "emissionsKg": 39300
+            "distanceKm": 5653,
+            "engine": "Trent XWB-84",
+            "emissionsKg": 245
         },
         {
             "origin": "LIM",
             "destination": "CUZ",
+            "distanceKm": 586,
             "engine": "AE 3007",
-            "emissionsKg": 3333
+            "emissionsKg": 185
         },
         {
             "origin": "CUZ",
             "destination": "AQP",
+            "distanceKm": 318,
             "engine": "AE 3007",
-            "emissionsKg": 1809
+            "emissionsKg": 100
         },
         {
             "origin": "AQP",
             "destination": "LIM",
+            "distanceKm": 786,
             "engine": "AE 3007",
-            "emissionsKg": 4471
+            "emissionsKg": 248
         },
         {
             "origin": "IAD",
             "destination": "BCN",
-            "engine": "Pearl 15",
-            "emissionsKg": 45299
+            "distanceKm": 6516,
+            "engine": "Trent XWB-84",
+            "emissionsKg": 282
         },
         {
             "origin": "BCN",
             "destination": "MRS",
+            "distanceKm": 351,
             "engine": "AE 3007",
-            "emissionsKg": 1996
+            "emissionsKg": 111
         },
         {
             "origin": "MRS",
             "destination": "NCE",
+            "distanceKm": 163,
             "engine": "AE 3007",
-            "emissionsKg": null
+            "emissionsKg": 100
         },
         {
             "origin": "NCE",
             "destination": "BZO",
+            "distanceKm": 449,
             "engine": "AE 3007",
-            "emissionsKg": 2554
+            "emissionsKg": 142
         },
         {
             "origin": "BZO",
             "destination": "VCE",
+            "distanceKm": 132,
             "engine": "AE 3007",
-            "emissionsKg": null
+            "emissionsKg": 100
         },
         {
             "origin": "VCE",
             "destination": "LJU",
+            "distanceKm": 182,
             "engine": "AE 3007",
-            "emissionsKg": null
+            "emissionsKg": 100
         },
         {
             "origin": "LJU",
             "destination": "ZAG",
+            "distanceKm": 135,
             "engine": "AE 3007",
-            "emissionsKg": null
+            "emissionsKg": 100
         },
         {
             "origin": "ZAG",
             "destination": "IAD",
-            "engine": "Trent 7000",
-            "emissionsKg": 124004
+            "distanceKm": 7267,
+            "engine": "Trent XWB-84",
+            "emissionsKg": 315
         },
         {
             "origin": "IAD",
             "destination": "LHR",
-            "engine": "Pearl 15",
-            "emissionsKg": 41031
+            "distanceKm": 5902,
+            "engine": "Trent XWB-84",
+            "emissionsKg": 256
         },
         {
             "origin": "LHR",
             "destination": "EDI",
+            "distanceKm": 534,
             "engine": "AE 3007",
-            "emissionsKg": 3037
+            "emissionsKg": 169
         },
         {
             "origin": "EDI",
             "destination": "ADX",
+            "distanceKm": 56,
             "engine": "AE 3007",
-            "emissionsKg": null
+            "emissionsKg": 100
         },
         {
             "origin": "IAD",
             "destination": "CDG",
-            "engine": "Pearl 15",
-            "emissionsKg": 43088
+            "distanceKm": 6198,
+            "engine": "Trent XWB-84",
+            "emissionsKg": 268
         },
         {
             "origin": "IAD",
             "destination": "BKK",
+            "distanceKm": 14158,
             "engine": "Trent XWB-84",
-            "emissionsKg": 250540
+            "emissionsKg": 500
         },
         {
             "origin": "BKK",
             "destination": "REP",
+            "distanceKm": 333,
             "engine": "AE 3007",
-            "emissionsKg": 1894
+            "emissionsKg": 105
         },
         {
             "origin": "REP",
             "destination": "PNH",
+            "distanceKm": 236,
             "engine": "AE 3007",
-            "emissionsKg": null
+            "emissionsKg": 100
         },
         {
             "origin": "PNH",
             "destination": "SGN",
+            "distanceKm": 214,
             "engine": "AE 3007",
-            "emissionsKg": null
+            "emissionsKg": 100
         },
         {
             "origin": "SGN",
             "destination": "DAD",
+            "distanceKm": 604,
             "engine": "AE 3007",
-            "emissionsKg": 3436
+            "emissionsKg": 191
         },
         {
             "origin": "DAD",
             "destination": "HAN",
+            "distanceKm": 629,
             "engine": "AE 3007",
-            "emissionsKg": 3578
+            "emissionsKg": 199
         },
         {
             "origin": "HAN",
             "destination": "IAD",
+            "distanceKm": 13315,
             "engine": "Trent XWB-84",
-            "emissionsKg": 235622
+            "emissionsKg": 500
         },
         {
             "origin": "IAD",
             "destination": "ORD",
+            "distanceKm": 945,
             "engine": "AE 3007",
-            "emissionsKg": 5375
+            "emissionsKg": 299
         },
         {
             "origin": "IAD",
             "destination": "IND",
+            "distanceKm": 765,
             "engine": "AE 3007",
-            "emissionsKg": 4351
+            "emissionsKg": 242
         },
         {
             "origin": "IAD",
             "destination": "SEA",
-            "engine": "Pearl 15",
-            "emissionsKg": 25729
+            "distanceKm": 3701,
+            "engine": "RB211-535E4",
+            "emissionsKg": 269
         },
         {
             "origin": "IAD",
             "destination": "PHL",
+            "distanceKm": 216,
             "engine": "AE 3007",
-            "emissionsKg": null
+            "emissionsKg": 100
         },
         {
             "origin": "IND",
             "destination": "BNA",
+            "distanceKm": 401,
             "engine": "AE 3007",
-            "emissionsKg": 2281
+            "emissionsKg": 127
         },
         {
             "origin": "IAD",
             "destination": "SDF",
+            "distanceKm": 725,
             "engine": "AE 3007",
-            "emissionsKg": 4124
+            "emissionsKg": 229
         },
         {
             "origin": "IND",
             "destination": "SJU",
-            "engine": "Pearl 15",
-            "emissionsKg": 21301
+            "distanceKm": 3064,
+            "engine": "RB211-535E4",
+            "emissionsKg": 223
         },
         {
             "origin": "SDF",
             "destination": "SEA",
-            "engine": "Pearl 15",
-            "emissionsKg": 21711
+            "distanceKm": 3123,
+            "engine": "RB211-535E4",
+            "emissionsKg": 227
+        },
+        {
+            "origin": "MVD",
+            "destination": "EZE",
+            "distanceKm": 229,
+            "engine": "AE 3007",
+            "emissionsKg": 100
+        },
+        {
+            "origin": "ADX",
+            "destination": "EDI",
+            "distanceKm": 56,
+            "engine": "AE 3007",
+            "emissionsKg": 100
         }
     ],
     "totals": {
-        "optimizedTotalEmissionsKg": 969564,
-        "worstCaseTotalEmissionsKg": 1796159,
-        "absoluteReductionKg": 826595,
-        "percentageReduction": 45.91
+        "optimizedTotalEmissionsKg": 8446,
+        "worstCaseTotalEmissionsKg": 14529,
+        "absoluteReductionKg": 6083,
+        "percentageReduction": 41.86
     },
     "insights": []
 }
