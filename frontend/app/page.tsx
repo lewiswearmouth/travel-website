@@ -74,6 +74,33 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  // 🗺️ Re-layout the map when the optimization panel is open
+  useEffect(() => {
+    if (!mapRef) return;
+
+    if (optimizerData && showOptimized) {
+      // Shift the “visual center” left so it doesn't hide behind the summary
+      mapRef.setPadding({
+        right: 100,   // space for the right-hand panel
+        left: 40,
+        top: 40,
+        bottom: 40,
+      });
+    } else {
+      // Go back to normal full-width centering
+      mapRef.setPadding({
+        right: 0,
+        left: 0,
+        top: 0,
+        bottom: 0,
+      });
+    }
+
+    // Force Mapbox to recompute layout after padding / flex change
+    mapRef.resize();
+  }, [mapRef, optimizerData, showOptimized]);
+
+
   // 🔘 Backend call for optimized routes
   const handleToggleOptimized = async () => {
     if (!showEngines) return;
@@ -226,231 +253,250 @@ export default function Home() {
         </div>
       )}
 
-      <div className="w-full max-w-5xl h-[450px] rounded-xl overflow-hidden border border-[#181D4E]">
-        {token ? (
-          <Map
-            ref={setMapRef}
-            interactiveLayerIds={['airport-routes-base', 'airport-routes-glow']}
-            mapboxAccessToken={token}
-            mapStyle="mapbox://styles/mapbox/dark-v11"
-            initialViewState={{ longitude: -80, latitude: 40, zoom: 1.2 }}
-            style={{ width: '100%', height: '100%' }}
-            cursor="pointer"
-            onClick={() => setActiveAirport(null)}
-            onMouseDown={() => {
-              if (mapRef?.getCanvas) {
-                mapRef.getCanvas().style.cursor = 'grabbing';
-              }
-            }}
-            onMouseUp={() => {
-              if (mapRef?.getCanvas) {
-                mapRef.getCanvas().style.cursor = 'pointer';
-              }
-            }}
-            onMouseMove={(event) => {
-              if (!mapRef) return;
-
-              const features = mapRef.queryRenderedFeatures(event.point, {
-                layers: ['airport-routes-base'],
-              });
-
-              // not over a route → clear hover, keep pointer
-              if (!features.length) {
-                if (hoveredId !== null) {
-                  mapRef.setFeatureState(
-                    { source: 'airport-routes', id: hoveredId },
-                    { hover: false }
-                  );
-                  setHoveredId(null);
+      {/* Map + Summary layout */}
+      <div
+        className={`
+          w-full max-w-6xl mt-2
+          ${optimizerData && showOptimized ? 'lg:flex lg:items-stretch lg:gap-4' : ''}
+        `}
+      >
+        {/* Map container */}
+        <div
+          className={`
+            rounded-xl overflow-hidden border border-[#181D4E]
+            ${optimizerData && showOptimized ? 'lg:w-2/3 h-[500px]' : 'w-full h-[500px]'}
+          `}
+        >
+          {token ? (
+            <Map
+              ref={setMapRef}
+              interactiveLayerIds={['airport-routes-base', 'airport-routes-glow']}
+              mapboxAccessToken={token}
+              mapStyle="mapbox://styles/mapbox/dark-v11"
+              initialViewState={{ longitude: -80, latitude: 40, zoom: 1.2 }}
+              style={{ width: '100%', height: '100%' }}
+              cursor="pointer"
+              onClick={() => setActiveAirport(null)}
+              onMouseDown={() => {
+                if (mapRef?.getCanvas) {
+                  mapRef.getCanvas().style.cursor = 'grabbing';
                 }
+              }}
+              onMouseUp={() => {
+                if (mapRef?.getCanvas) {
+                  mapRef.getCanvas().style.cursor = 'pointer';
+                }
+              }}
+              onMouseMove={(event) => {
+                if (!mapRef) return;
+
+                if (!mapRef.getStyle()?.layers?.some((l) => l.id === 'airport-routes-base')) {
+                  return;
+                }
+
+                const features = mapRef.queryRenderedFeatures(event.point, {
+                  layers: ['airport-routes-base'],
+                });
+
+
+                // not over a route → clear hover, keep pointer
+                if (!features.length) {
+                  if (hoveredId !== null) {
+                    mapRef.setFeatureState(
+                      { source: 'airport-routes', id: hoveredId },
+                      { hover: false }
+                    );
+                    setHoveredId(null);
+                  }
+                  if (mapRef.getCanvas) {
+                    mapRef.getCanvas().style.cursor = 'pointer';
+                  }
+                  return;
+                }
+
+                const feature = features[0];
+                const id = feature.id as number;
+
+                // over a route → pointer
                 if (mapRef.getCanvas) {
                   mapRef.getCanvas().style.cursor = 'pointer';
                 }
-                return;
-              }
 
-              const feature = features[0];
-              const id = feature.id as number;
-
-              // over a route → pointer
-              if (mapRef.getCanvas) {
-                mapRef.getCanvas().style.cursor = 'pointer';
-              }
-
-              if (hoveredId !== id) {
-                if (hoveredId !== null) {
+                if (hoveredId !== id) {
+                  if (hoveredId !== null) {
+                    mapRef.setFeatureState(
+                      { source: 'airport-routes', id: hoveredId },
+                      { hover: false }
+                    );
+                  }
                   mapRef.setFeatureState(
-                    { source: 'airport-routes', id: hoveredId },
-                    { hover: false }
+                    { source: 'airport-routes', id },
+                    { hover: true }
                   );
+                  setHoveredId(id);
                 }
-                mapRef.setFeatureState(
-                  { source: 'airport-routes', id },
-                  { hover: true }
-                );
-                setHoveredId(id);
-              }
-            }}
-          >
-            {/* 📍 Airport Pins */}
-            {Object.entries(AIRPORTS).map(([code, ap]) => (
-              <Marker
-                key={code}
-                longitude={ap.coords[0]}
-                latitude={ap.coords[1]}
-                anchor="bottom"
-              >
-                <div
-                  className="relative cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActiveAirport(code);
-                  }}
-                >
-                  <div className="text-2xl hover:scale-125 transition">📍</div>
-                  {activeAirport === code && (
-                    <div
-                      className="absolute left-1/2 -translate-x-1/2 mt-1
-                      px-2 py-1 bg-black/70 text-white text-xs rounded shadow-lg whitespace-nowrap pointer-events-none"
-                    >
-                      {ap.name} ({code})
-                    </div>
-                  )}
-                </div>
-              </Marker>
-            ))}
-
-            {/* ✈ Base Route Layer */}
-            <Source id="airport-routes" type="geojson" data={geojson as any} />
-
-            <Layer
-              id="airport-routes-base"
-              type="line"
-              source="airport-routes"
-              paint={{
-                'line-width': [
-                  'case',
-                  ['==', ['feature-state', 'hover'], true],
-                  6,
-                  4,
-                ],
-                'line-color': [
-                  'case',
-                  ['==', ['feature-state', 'hover'], true],
-                  '#C0C6D9',
-                  ['get', 'engineColor'],
-                ],
-                'line-opacity': 0.9,
               }}
-            />
-
-            {/* ✨ Glow Pulse Layer for Changed Routes */}
-            {showEngines && showOptimized && (
-              <>
-                <Source
-                  id="changed-routes"
-                  type="geojson"
-                  data={changedGeojson as any}
-                />
-                <Layer
-                  id="airport-routes-glow"
-                  type="line"
-                  source="changed-routes"
-                  paint={{
-                    'line-width': 7,
-                    'line-color': [
-                      'interpolate',
-                      ['linear'],
-                      phase,
-                      0,
-                      '#ffffff',
-                      0.5,
-                      '#ffff99',
-                      1,
-                      '#ffffff',
-                    ],
-                    'line-opacity': [
-                      'interpolate',
-                      ['linear'],
-                      phase,
-                      0,
-                      0.0,
-                      0.5,
-                      0.8,
-                      1,
-                      0.0,
-                    ],
-                  }}
-                />
-              </>
-            )}
-
-            {/* Tooltip */}
-            {hoveredId !== null && (
-              <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-3 py-2 rounded-lg shadow-lg pointer-events-none z-50">
-                {(() => {
-                  const feature = (airportRoutes as any).find(
-                    (f: any) => f?.id === hoveredId
-                  );
-                  if (!feature) return null;
-                  const p = feature.properties;
-                  return (
-                    <div className="text-center space-y-0.5">
-                      <div className="font-bold text-sm">
-                        {p.origin} → {p.destination}
+            >
+              {/* 📍 Airport Pins */}
+              {Object.entries(AIRPORTS).map(([code, ap]) => (
+                <Marker
+                  key={code}
+                  longitude={ap.coords[0]}
+                  latitude={ap.coords[1]}
+                  anchor="bottom"
+                >
+                  <div
+                    className="relative cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveAirport(code);
+                    }}
+                  >
+                    <div className="text-2xl hover:scale-125 transition">📍</div>
+                    {activeAirport === code && (
+                      <div
+                        className="absolute left-1/2 -translate-x-1/2 mt-1
+                        px-2 py-1 bg-black/70 text-white text-xs rounded shadow-lg whitespace-nowrap pointer-events-none"
+                      >
+                        {ap.name} ({code})
                       </div>
-                      <div>{p.distanceKm} km</div>
-                    </div>
-                  );
-                })()}
+                    )}
+                  </div>
+                </Marker>
+              ))}
+
+              {/* ✈ Base Route Layer */}
+              <Source id="airport-routes" type="geojson" data={geojson as any} />
+
+              <Layer
+                id="airport-routes-base"
+                type="line"
+                source="airport-routes"
+                paint={{
+                  'line-width': [
+                    'case',
+                    ['==', ['feature-state', 'hover'], true],
+                    6,
+                    4,
+                  ],
+                  'line-color': [
+                    'case',
+                    ['==', ['feature-state', 'hover'], true],
+                    '#C0C6D9',
+                    ['get', 'engineColor'],
+                  ],
+                  'line-opacity': 0.9,
+                }}
+              />
+
+              {/* ✨ Glow Pulse Layer for Changed Routes */}
+              {showEngines && showOptimized && (
+                <>
+                  <Source
+                    id="changed-routes"
+                    type="geojson"
+                    data={changedGeojson as any}
+                  />
+                  <Layer
+                    id="airport-routes-glow"
+                    type="line"
+                    source="changed-routes"
+                    paint={{
+                      'line-width': 7,
+                      'line-color': [
+                        'interpolate',
+                        ['linear'],
+                        phase,
+                        0,
+                        '#ffffff',
+                        0.5,
+                        '#ffff99',
+                        1,
+                        '#ffffff',
+                      ],
+                      'line-opacity': [
+                        'interpolate',
+                        ['linear'],
+                        phase,
+                        0,
+                        0.0,
+                        0.5,
+                        0.8,
+                        1,
+                        0.0,
+                      ],
+                    }}
+                  />
+                </>
+              )}
+
+              {/* Tooltip */}
+              {hoveredId !== null && (
+                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-3 py-2 rounded-lg shadow-lg pointer-events-none z-50">
+                  {(() => {
+                    const feature = (airportRoutes as any).find(
+                      (f: any) => f?.id === hoveredId
+                    );
+                    if (!feature) return null;
+                    const p = feature.properties;
+                    return (
+                      <div className="text-center space-y-0.5">
+                        <div className="font-bold text-sm">
+                          {p.origin} → {p.destination}
+                        </div>
+                        <div>{p.distanceKm} km</div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+
+              {showEngines && <EngineLegend />}
+            </Map>
+          ) : (
+            <div className="flex items-center justify-center h-full text-sm text-red-300">
+              Missing NEXT_PUBLIC_MAPBOX_TOKEN
+            </div>
+          )}
+        </div>
+
+        {/* Optimization summary (on the right on large screens, below on small) */}
+        {optimizerData && showOptimized && (
+          <aside className="mt-4 lg:mt-0 lg:w-1/3 bg-[#111631] text-[#C0C6D9] p-4 rounded-xl border border-[#181D4E] shadow-lg">
+            <h2 className="text-xl font-bold mb-3">Optimization Summary</h2>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
+                <div className="opacity-70">Worst Case Per Passenger Emissions</div>
+                <div className="text-lg font-semibold">
+                  {optimizerData.totals.worstCaseTotalEmissionsKg?.toLocaleString()} kg CO₂
+                </div>
               </div>
-            )}
 
-            {showEngines && <EngineLegend />}
-          </Map>
+              <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
+                <div className="opacity-70">Optimized Per Passenger Emissions</div>
+                <div className="text-lg font-semibold text-green-400">
+                  {optimizerData.totals.optimizedTotalEmissionsKg?.toLocaleString()} kg CO₂
+                </div>
+              </div>
 
-        ) : (
-          <div className="flex items-center justify-center h-full text-sm text-red-300">
-            Missing NEXT_PUBLIC_MAPBOX_TOKEN
-          </div>
+              <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
+                <div className="opacity-70">Total Reduction</div>
+                <div className="text-lg font-semibold text-yellow-300">
+                  {optimizerData.totals.absoluteReductionKg?.toLocaleString()} kg
+                </div>
+              </div>
 
+              <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
+                <div className="opacity-70">% Reduction</div>
+                <div className="text-lg font-semibold text-blue-300">
+                  {optimizerData.totals.percentageReduction?.toFixed(2)}%
+                </div>
+              </div>
+            </div>
+          </aside>
         )}
       </div>
-      {optimizerData && showOptimized && (
-        <div className="w-full max-w-5xl mt-4 bg-[#111631] text-[#C0C6D9] p-4 rounded-xl border border-[#181D4E] shadow-lg">
-          <h2 className="text-xl font-bold mb-3">Optimization Summary</h2>
-
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-              <div className="opacity-70">Worst Case Per Passenger Emissions</div>
-              <div className="text-lg font-semibold">
-                {optimizerData.totals.worstCaseTotalEmissionsKg?.toLocaleString()} kg CO₂
-              </div>
-            </div>
-
-            <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-              <div className="opacity-70">Optimized Per Passenger Emissions</div>
-              <div className="text-lg font-semibold text-green-400">
-                {optimizerData.totals.optimizedTotalEmissionsKg?.toLocaleString()} kg CO₂
-              </div>
-            </div>
-
-            <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-              <div className="opacity-70">Total Reduction</div>
-              <div className="text-lg font-semibold text-yellow-300">
-                {optimizerData.totals.absoluteReductionKg?.toLocaleString()} kg
-              </div>
-            </div>
-
-            <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-              <div className="opacity-70">% Reduction</div>
-              <div className="text-lg font-semibold text-blue-300">
-                {optimizerData.totals.percentageReduction?.toFixed(2)}%
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
     </main>
   );

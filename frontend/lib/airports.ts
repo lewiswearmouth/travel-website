@@ -9,6 +9,7 @@ export const AIRPORTS: Record<string, { coords: [number, number]; name: string }
     SDF: { coords: [-85.7360, 38.1744], name: "Louisville Muhammad Ali International Airport" },
     SJU: { coords: [-66.0018, 18.4394], name: "Luis Muñoz Marín International Airport" },
     IND: { coords: [-86.2944, 39.7173], name: "Indianapolis International Airport" },
+    // KLAF: { coords: [-86.937, 40.412], name: "Purdue University Airport" },
 
     // SOUTH AMERICA ---------------------------
     EZE: { coords: [-58.5358, -34.8222], name: "Buenos Aires Ministro Pistarini" },
