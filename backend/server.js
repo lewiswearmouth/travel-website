@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import optimizerCachedRouter from "./routes/optimizer_cached.js";
 
-// Load environment variables
 dotenv.config();
 
 import optimizeRouter from "./routes/optimize.js";

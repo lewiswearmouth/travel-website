@@ -8,6 +8,7 @@ export function generateEmissionsTable() {
         const eligible = getEligibleEngines(trip.distanceKm);
 
         for (const engine of eligible) {
+            // Per passenger emissions
             const emissionsKg = (trip.distanceKm * engine.aircraftBurnKgPerKm * 3.16) / engine.passengers;
 
             rows.push({
