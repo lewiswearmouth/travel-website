@@ -46,5 +46,8 @@ export const TRIPS = [
     { origin: "IAD", destination: "SDF" }, // DC to Louisville
     { origin: "IND", destination: "SJU" }, // Indianapolis to San Juan
     { origin: "SDF", destination: "SEA" }, // Louisville to San Juan
+    { origin: "IAD", destination: "TPA" },
+    { origin: "IND", destination: "TPA" },
+    { origin: "SDF", destination: "TPA" },
     // { origin: "IAD", destination: "KLAF" }, // Louisville to San Juan
 ];
