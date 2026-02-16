@@ -2,220 +2,68 @@
 
 import dynamic from 'next/dynamic';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 
 import { AIRPORTS } from '@/lib/airports';
 import { TRIPS } from '@/lib/flights';
 import { haversineDistance } from '@/lib/distances';
-import { defaultEngineForDistance } from '@/lib/default_engine';
 
 import { Source, Layer, Marker, MapRef } from '@vis.gl/react-mapbox';
+import Image from 'next/image';
+import { getPhotosForAirport, getCityForAirport } from "@/lib/photoIndex.generated";
 
-const ENGINE_COLORS: Record<string, string> = {
-  "Trent XWB-84": "#4C8AFF",
-  "RB211-535E4": "#FF8C42",
-  "Pearl 15": "#42D77D",
-  "AE 3007": "#CC66FF",
-};
-
-type OptimizerData = {
-  optimalAssignments: Record<string, string>;
-  totals?: any;
-  insights?: any;
-};
-
-const Map = dynamic(() => import('@vis.gl/react-mapbox').then(m => m.Map), {
+const Map = dynamic(() => import('@vis.gl/react-mapbox').then((m) => m.Map), {
   ssr: false,
 });
-
-function EngineLegend() {
-  const items = [
-    { name: "Trent XWB-84", color: "#4C8AFF" },
-    { name: "RB211-535E4", color: "#FF8C42" },
-    { name: "Pearl 15", color: "#42D77D" },
-    { name: "AE 3007", color: "#CC66FF" },
-  ];
-
-  return (
-    <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-sm px-3 py-2 rounded-lg shadow-lg border border-[#181D4E] text-xs space-y-1 z-50">
-      <div className="font-semibold text-[#C0C6D9] mb-1">Engine Types</div>
-      {items.map(item => (
-        <div key={item.name} className="flex items-center gap-2">
-          <span
-            className="inline-block w-3 h-3 rounded-sm"
-            style={{ backgroundColor: item.color }}
-          ></span>
-          <span className="text-[#C0C6D9]">{item.name}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 export default function Home() {
   const [activeAirport, setActiveAirport] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   const [mapRef, setMapRef] = useState<MapRef | null>(null);
-  const [showEngines, setShowEngines] = useState(false);
-  const [showOptimized, setShowOptimized] = useState(false);
 
-  // backend optimization state
-  const [optimizerData, setOptimizerData] = useState<OptimizerData | null>(null);
-  const [isOptimizing, setIsOptimizing] = useState(false);
-  const [optError, setOptError] = useState<string | null>(null);
-
-  // 🔄 Phase for glow pulse (0 → 1 → 0 smoothly)
-  const [phase, setPhase] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPhase((p) => (p + 0.02) % 1);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
-
-  // 🗺️ Re-layout the map when the optimization panel is open
-  useEffect(() => {
-    if (!mapRef) return;
-
-    if (optimizerData && showOptimized) {
-      // Shift the “visual center” left so it doesn't hide behind the summary
-      mapRef.setPadding({
-        right: 100,   // space for the right-hand panel
-        left: 40,
-        top: 40,
-        bottom: 40,
-      });
-    } else {
-      // Go back to normal full-width centering
-      mapRef.setPadding({
-        right: 0,
-        left: 0,
-        top: 0,
-        bottom: 0,
-      });
-    }
-
-    // Force Mapbox to recompute layout after padding / flex change
-    mapRef.resize();
-  }, [mapRef, optimizerData, showOptimized]);
-
-
-  // 🔘 Backend call for optimized routes
-  const handleToggleOptimized = async () => {
-    if (!showEngines) return;
-
-    // if we have cached data already just toggle the view
-    if (optimizerData) {
-      setShowOptimized(prev => !prev);
-      return;
-    }
-
-    try {
-      setIsOptimizing(true);
-      setOptError(null);
-
-      const res = await fetch('http://localhost:3001/api/optimizer-cached');
-
-      if (!res.ok) {
-        throw new Error(`Backend failed with ${res.status}`);
-      }
-
-      const data = await res.json();
-      console.log("Loaded cached optimizer result:", data);
-
-      // Normalize optimalAssignments to a { "ORIG-DEST": "Engine" } map
-      let mappedAssignments: Record<string, string> = {};
-
-      if (Array.isArray(data.optimalAssignments)) {
-        data.optimalAssignments.forEach((r: any) => {
-          if (r.origin && r.destination && r.engine) {
-            const key = `${r.origin}-${r.destination}`;
-            mappedAssignments[key] = r.engine;
-          }
-        });
-      } else if (data.optimalAssignments) {
-        // already a map
-        mappedAssignments = data.optimalAssignments;
-      }
-
-      setOptimizerData({
-        ...data,
-        optimalAssignments: mappedAssignments,
-      });
-
-      setShowOptimized(true); // show optimized immediately
-
-    } catch (err) {
-      console.error(err);
-      setOptError("Failed to load cached optimized data");
-    } finally {
-      setIsOptimizing(false);
-    }
-  };
-
-  // Build arcs for flights involving selected airport
+  // Build routes for flights involving selected airport
   const airportRoutes = useMemo(() => {
     if (!activeAirport) return [];
 
     return TRIPS.map((f, index) => {
-      if (f.origin !== activeAirport && f.destination !== activeAirport) {
-        return null;
-      }
+      if (f.origin !== activeAirport && f.destination !== activeAirport) return null;
 
       const c1 = AIRPORTS[f.origin]?.coords;
       const c2 = AIRPORTS[f.destination]?.coords;
       if (!c1 || !c2) return null;
 
       const distanceKm = haversineDistance(c1, c2);
-      const routeId = `${f.origin}-${f.destination}`;
-
-      // 1) Baseline engine: purely distance-based
-      const baselineEngine = defaultEngineForDistance(distanceKm);
-
-      // 2) Optimized engine: only use backend if it gave us one for this route
-      const optimizedEngine =
-        optimizerData?.optimalAssignments?.[routeId] ?? baselineEngine;
-
-      // 3) What the map actually shows
-      const engine =
-        showEngines && showOptimized ? optimizedEngine : baselineEngine;
-
-      // 4) Did this route *actually* change?
-      const changed = baselineEngine !== optimizedEngine;
-
-      const engineColor = showEngines
-        ? ENGINE_COLORS[engine] || '#42D9F4'
-        : '#42D9F4';
 
       return {
         type: 'Feature',
         id: index,
-        geometry: { type: 'LineString', coordinates: [c1, c2] },
+        geometry: {
+          type: 'LineString',
+          coordinates: [c1, c2],
+        },
         properties: {
           origin: f.origin,
           destination: f.destination,
-          distanceKm,
-          engine,
-          engineColor,
-          changed,
+          distanceKm: Math.round(distanceKm),
         },
       };
     }).filter(Boolean);
-  }, [activeAirport, showEngines, showOptimized, optimizerData]);
+  }, [activeAirport]);
 
   const geojson = useMemo(
     () => ({ type: 'FeatureCollection', features: airportRoutes as any }),
     [airportRoutes]
   );
 
-  // Changed-only dataset for glow layer
-  const changedGeojson = useMemo(
-    () => ({
-      type: 'FeatureCollection',
-      features: (airportRoutes as any).filter((f: any) => f.properties.changed),
-    }),
-    [airportRoutes]
-  );
+  const photos = useMemo(() => {
+    if (!activeAirport) return [];
+    return getPhotosForAirport(activeAirport);
+  }, [activeAirport]);
+
+  const activeCity = useMemo(() => {
+    if (!activeAirport) return null;
+    return getCityForAirport(activeAirport);
+  }, [activeAirport]);
 
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -223,53 +71,12 @@ export default function Home() {
     <main className="flex flex-col items-center min-h-screen bg-[#0A0F2D] text-[#C0C6D9] p-6">
       <h1 className="text-3xl font-bold mb-4">Travel Map ✈️</h1>
 
-      <div className="flex gap-3 mb-3">
-        <button
-          onClick={() => setShowEngines((p) => !p)}
-          className="px-3 py-1 border border-[#181D4E] rounded-lg text-sm hover:bg-[#181D4E]"
-        >
-          {showEngines ? 'Hide Engines' : 'Show Engines'}
-        </button>
-
-        <button
-          onClick={handleToggleOptimized}
-          disabled={!showEngines || isOptimizing}
-          className={`px-3 py-1 border border-[#181D4E] rounded-lg text-sm hover:bg-[#181D4E]
-            ${(!showEngines || isOptimizing) ? 'opacity-40 cursor-not-allowed' : ''}
-          `}
-        >
-          {isOptimizing
-            ? 'Optimizing...'
-            : showOptimized
-              ? 'Hide Optimized Routes'
-              : 'Show Optimized Routes'}
-        </button>
-      </div>
-
-      {optError && (
-        <div className="text-red-400 text-xs mb-2">
-          {optError}
-        </div>
-      )}
-
-      {/* Map + Summary layout */}
-      <div
-        className={`
-          w-full max-w-6xl mt-2
-          ${optimizerData && showOptimized ? 'lg:flex lg:items-stretch lg:gap-4' : ''}
-        `}
-      >
-        {/* Map container */}
-        <div
-          className={`
-            rounded-xl overflow-hidden border border-[#181D4E]
-            ${optimizerData && showOptimized ? 'lg:w-2/3 h-[500px]' : 'w-full h-[500px]'}
-          `}
-        >
+      <div className="w-full max-w-6xl mt-2">
+        <div className="rounded-xl overflow-hidden border border-[#181D4E] w-full h-[500px]">
           {token ? (
             <Map
               ref={setMapRef}
-              interactiveLayerIds={['airport-routes-base', 'airport-routes-glow']}
+              interactiveLayerIds={['airport-routes-base']}
               mapboxAccessToken={token}
               mapStyle="mapbox://styles/mapbox/dark-v11"
               initialViewState={{ longitude: -80, latitude: 40, zoom: 1.2 }}
@@ -297,14 +104,10 @@ export default function Home() {
                   layers: ['airport-routes-base'],
                 });
 
-
-                // not over a route → clear hover, keep pointer
+                // not over a route → clear hover
                 if (!features.length) {
                   if (hoveredId !== null) {
-                    mapRef.setFeatureState(
-                      { source: 'airport-routes', id: hoveredId },
-                      { hover: false }
-                    );
+                    mapRef.setFeatureState({ source: 'airport-routes', id: hoveredId }, { hover: false });
                     setHoveredId(null);
                   }
                   if (mapRef.getCanvas) {
@@ -316,34 +119,22 @@ export default function Home() {
                 const feature = features[0];
                 const id = feature.id as number;
 
-                // over a route → pointer
                 if (mapRef.getCanvas) {
                   mapRef.getCanvas().style.cursor = 'pointer';
                 }
 
                 if (hoveredId !== id) {
                   if (hoveredId !== null) {
-                    mapRef.setFeatureState(
-                      { source: 'airport-routes', id: hoveredId },
-                      { hover: false }
-                    );
+                    mapRef.setFeatureState({ source: 'airport-routes', id: hoveredId }, { hover: false });
                   }
-                  mapRef.setFeatureState(
-                    { source: 'airport-routes', id },
-                    { hover: true }
-                  );
+                  mapRef.setFeatureState({ source: 'airport-routes', id }, { hover: true });
                   setHoveredId(id);
                 }
               }}
             >
               {/* 📍 Airport Pins */}
               {Object.entries(AIRPORTS).map(([code, ap]) => (
-                <Marker
-                  key={code}
-                  longitude={ap.coords[0]}
-                  latitude={ap.coords[1]}
-                  anchor="bottom"
-                >
+                <Marker key={code} longitude={ap.coords[0]} latitude={ap.coords[1]} anchor="bottom">
                   <div
                     className="relative cursor-pointer"
                     onClick={(e) => {
@@ -364,7 +155,7 @@ export default function Home() {
                 </Marker>
               ))}
 
-              {/* ✈ Base Route Layer */}
+              {/* ✈ Routes */}
               <Source id="airport-routes" type="geojson" data={geojson as any} />
 
               <Layer
@@ -372,70 +163,17 @@ export default function Home() {
                 type="line"
                 source="airport-routes"
                 paint={{
-                  'line-width': [
-                    'case',
-                    ['==', ['feature-state', 'hover'], true],
-                    6,
-                    4,
-                  ],
-                  'line-color': [
-                    'case',
-                    ['==', ['feature-state', 'hover'], true],
-                    '#C0C6D9',
-                    ['get', 'engineColor'],
-                  ],
+                  'line-width': ['case', ['==', ['feature-state', 'hover'], true], 6, 4],
+                  'line-color': ['case', ['==', ['feature-state', 'hover'], true], '#C0C6D9', '#4C8AFF'],
                   'line-opacity': 0.9,
                 }}
               />
-
-              {/* ✨ Glow Pulse Layer for Changed Routes */}
-              {showEngines && showOptimized && (
-                <>
-                  <Source
-                    id="changed-routes"
-                    type="geojson"
-                    data={changedGeojson as any}
-                  />
-                  <Layer
-                    id="airport-routes-glow"
-                    type="line"
-                    source="changed-routes"
-                    paint={{
-                      'line-width': 7,
-                      'line-color': [
-                        'interpolate',
-                        ['linear'],
-                        phase,
-                        0,
-                        '#ffffff',
-                        0.5,
-                        '#ffff99',
-                        1,
-                        '#ffffff',
-                      ],
-                      'line-opacity': [
-                        'interpolate',
-                        ['linear'],
-                        phase,
-                        0,
-                        0.0,
-                        0.5,
-                        0.8,
-                        1,
-                        0.0,
-                      ],
-                    }}
-                  />
-                </>
-              )}
 
               {/* Tooltip */}
               {hoveredId !== null && (
                 <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-3 py-2 rounded-lg shadow-lg pointer-events-none z-50">
                   {(() => {
-                    const feature = (airportRoutes as any).find(
-                      (f: any) => f?.id === hoveredId
-                    );
+                    const feature = (airportRoutes as any).find((f: any) => f?.id === hoveredId);
                     if (!feature) return null;
                     const p = feature.properties;
                     return (
@@ -449,8 +187,6 @@ export default function Home() {
                   })()}
                 </div>
               )}
-
-              {showEngines && <EngineLegend />}
             </Map>
           ) : (
             <div className="flex items-center justify-center h-full text-sm text-red-300">
@@ -459,44 +195,48 @@ export default function Home() {
           )}
         </div>
 
-        {/* Optimization summary (on the right on large screens, below on small) */}
-        {optimizerData && showOptimized && (
-          <aside className="mt-4 lg:mt-0 lg:w-1/3 bg-[#111631] text-[#C0C6D9] p-4 rounded-xl border border-[#181D4E] shadow-lg">
-            <h2 className="text-xl font-bold mb-3">Optimization Summary</h2>
-
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-                <div className="opacity-70">Worst Case Per Passenger Emissions</div>
-                <div className="text-lg font-semibold">
-                  {optimizerData.totals.worstCaseTotalEmissionsKg?.toLocaleString()} kg CO₂
-                </div>
+        {/* ✅ FIXED WRAPPER HERE */}
+        {activeAirport && (
+          <div className="w-full mt-6">
+            <div className="rounded-xl border border-[#181D4E] bg-[#0B1238] p-4">
+              <div className="flex items-baseline justify-between gap-4">
+                <h2 className="text-lg font-semibold">{activeCity ?? 'Unknown city'} — Photos</h2>
+                <div className="text-xs text-[#9AA3BC]">Click another pin to switch</div>
               </div>
 
-              <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-                <div className="opacity-70">Optimized Per Passenger Emissions</div>
-                <div className="text-lg font-semibold text-green-400">
-                  {optimizerData.totals.optimizedTotalEmissionsKg?.toLocaleString()} kg CO₂
-                </div>
-              </div>
+              {photos.length === 0 ? (
+                <div className="mt-3 text-sm text-[#9AA3BC]">No photos added yet for this city.</div>
+              ) : (
+                <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {photos.map((p, i) => (
+                    <div
+                      key={p.src + i}
+                      className="rounded-lg overflow-hidden border border-[#181D4E] bg-black/20"
+                    >
+                      <div className="relative w-full aspect-square">
+                        <Image
+                          src={p.src}
+                          alt={p.caption ?? 'travel photo'}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        />
+                      </div>
 
-              <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-                <div className="opacity-70">Total Reduction</div>
-                <div className="text-lg font-semibold text-yellow-300">
-                  {optimizerData.totals.absoluteReductionKg?.toLocaleString()} kg
+                      {(p.caption || p.date) && (
+                        <div className="p-2 text-xs text-[#C0C6D9]">
+                          {p.caption && <div className="font-medium">{p.caption}</div>}
+                          {p.date && <div className="text-[#9AA3BC]">{p.date}</div>}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              </div>
-
-              <div className="bg-[#0D1328] p-3 rounded-lg border border-[#181D4E]">
-                <div className="opacity-70">% Reduction</div>
-                <div className="text-lg font-semibold text-blue-300">
-                  {optimizerData.totals.percentageReduction?.toFixed(2)}%
-                </div>
-              </div>
+              )}
             </div>
-          </aside>
+          </div>
         )}
       </div>
-
     </main>
   );
 }

@@ -29,7 +29,6 @@ export const TRIPS = [
     // Europe Other
     { origin: "IAD", destination: "LHR" }, // DC to London
     { origin: "LHR", destination: "EDI" }, // London to Edinburgh
-    { origin: "EDI", destination: "ADX" }, // Edinburgh to St. Andrews
     { origin: "IAD", destination: "CDG" }, // DC to Paris
 
     // Southeast Asia Summer 2024
@@ -50,8 +49,7 @@ export const TRIPS = [
     { origin: "IAD", destination: "SDF" }, // DC to Louisville
     { origin: "IND", destination: "SJU" }, // Indianapolis to San Juan
     { origin: "SDF", destination: "SEA" }, // Louisville to San Juan
-    { origin: "IAD", destination: "TPA" },
-    { origin: "IND", destination: "TPA" },
-    { origin: "SDF", destination: "TPA" },
-    // { origin: "IAD", destination: "KLAF" }, // Louisville to San Juan
+    { origin: "IAD", destination: "TPA" }, // DC to Tampa
+    { origin: "IND", destination: "TPA" }, // Indianapolis to Tampa
+    { origin: "SDF", destination: "TPA" }, // Louisville to Tampa
 ];
