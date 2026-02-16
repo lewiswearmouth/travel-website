@@ -1,6 +1,7 @@
 export const TRIPS = [
     // Europe
     // Study Abroad 2026
+    { origin: "IAD", destination: "MAD" },
     { origin: "MAD", destination: "BUD" }, // Madrid to Budapest
 
     // Summer 2023

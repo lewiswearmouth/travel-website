@@ -12,6 +12,10 @@ export const TRIPS = [
     { origin: "CUZ", destination: "AQP" }, // Cusco to Arequipa
     { origin: "AQP", destination: "LIM" }, // Arequipa to Lima
 
+    // Europe Study Abroad
+    { origin: "IAD", destination: "MAD" },
+    { origin: "MAD", destination: "BUD" },
+
     // Europe Summer 2023
     { origin: "IAD", destination: "BCN" }, // DC to Barcelona
     { origin: "BCN", destination: "MRS" }, // Barcelona to Marseille

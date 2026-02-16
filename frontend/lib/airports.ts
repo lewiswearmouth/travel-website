@@ -31,7 +31,7 @@ export const AIRPORTS: Record<string, { coords: [number, number]; name: string }
     NCE: { coords: [7.2159, 43.6584], name: "Nice Côte d'Azur Airport" },
     ADX: { coords: [-2.8684, 56.3729], name: "RAF Leuchars / St Andrews" },
     MRS: { coords: [5.2214, 43.4393], name: "Marseille Provence Airport" },
-    MAD: { coords: [-3.5722, 40.4934], name: "Adolfo Suárez Madrid–Barajas Airport" },
+    MAD: { coords: [-3.5722, 40.4934], name: "Adolfo Suárez Madrid-Barajas Airport" },
     BUD: { coords: [19.2624, 47.4302], name: "Budapest Ferenc Liszt International Airport" },
 
     // SOUTHEAST ASIA -------------------------
