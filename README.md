@@ -1,6 +1,6 @@
 # Travel Website Frontend
 
-Personal travel atlas built with Next.js, Mapbox routes, and a country-first photo gallery.
+Personal travel atlas built with Next.js and Mapbox routes.
 
 ## Development
 
