@@ -9,7 +9,6 @@ import { useMemo, useState } from 'react';
 import { Layer, MapRef, Marker, Source } from '@vis.gl/react-mapbox';
 
 import {
-  JOURNEYS,
   LOCATION_BY_ID,
   LOCATIONS,
   MODE_STYLES,
@@ -22,6 +21,10 @@ const Map = dynamic(() => import('@vis.gl/react-mapbox').then((m) => m.Map), {
 });
 
 type ActiveView = 'globe' | 'gallery';
+
+function locationLabel(location: { name: string; country: string }) {
+  return `${location.name}, ${location.country}`;
+}
 
 function connectedRoutes(locationId: string) {
   return ROUTE_SEGMENTS.filter(
@@ -49,7 +52,6 @@ export default function Home() {
   const [activeView, setActiveView] = useState<ActiveView>('globe');
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string>('Spain');
-  const [detailsExpanded, setDetailsExpanded] = useState(false);
   const [hoveredRouteId, setHoveredRouteId] = useState<string | null>(null);
   const [mapRef, setMapRef] = useState<MapRef | null>(null);
 
@@ -102,8 +104,7 @@ export default function Home() {
         country,
         locations: locations.sort((a, b) => a.name.localeCompare(b.name)),
         photoCount: locations.reduce(
-          (count, location) =>
-            count + location.visits.reduce((visitCount, visit) => visitCount + visit.photos.length, 0),
+          (count, location) => count + location.photos.length,
           0
         ),
         coverPhoto: locations.find((location) => location.coverPhoto)?.coverPhoto,
@@ -129,7 +130,7 @@ export default function Home() {
                 Personal travel atlas
               </p>
               <h1 className="mt-2 text-3xl font-semibold tracking-normal text-[#16221F] sm:text-4xl">
-                A small collection of my travels
+                A collection of my travels
               </h1>
             </div>
 
@@ -177,7 +178,6 @@ export default function Home() {
                 onLoad={(event) => applyMapAtmosphere(event.target)}
                 onClick={() => {
                   setSelectedLocationId(null);
-                  setDetailsExpanded(false);
                   setHoveredRouteId(null);
                 }}
                 onMouseMove={(event) => {
@@ -227,7 +227,6 @@ export default function Home() {
                         onClick={(event) => {
                           event.stopPropagation();
                           setSelectedLocationId(location.id);
-                          setDetailsExpanded(false);
                         }}
                         className={`group relative grid h-8 w-8 place-items-center text-2xl drop-shadow-lg transition ${active
                           ? 'scale-125'
@@ -281,16 +280,13 @@ export default function Home() {
                     Location
                   </p>
                   <h2 className="mt-1 text-lg font-semibold text-[#16221F]">
-                    {selectedLocation ? selectedLocation.name : 'Select a location'}
+                    {selectedLocation ? locationLabel(selectedLocation) : 'Select a location'}
                   </h2>
                 </div>
                 {selectedLocation && (
                   <button
                     type="button"
-                    onClick={() => {
-                      setSelectedLocationId(null);
-                      setDetailsExpanded(false);
-                    }}
+                    onClick={() => setSelectedLocationId(null)}
                     className="rounded-md border border-[#CFC7BA] px-2 py-1 text-xs font-semibold text-[#52605A] hover:bg-[#F0ECE4]"
                   >
                     Clear
@@ -334,44 +330,6 @@ export default function Home() {
                     View Gallery
                   </button>
 
-                  <div className="rounded-md border border-[#E0D8CC] bg-white p-3">
-                    <div className="space-y-1 text-sm text-[#52605A]">
-                      <div className="font-semibold text-[#1C2A26]">{selectedLocation.country}</div>
-                      <div>{selectedLocation.visitMonth}</div>
-                      <div>{selectedRoutes.length} connected routes</div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setDetailsExpanded((expanded) => !expanded)}
-                      className="mt-3 w-full rounded-md border border-[#CFC7BA] px-3 py-2 text-sm font-semibold text-[#34413C] hover:bg-[#F0ECE4]"
-                    >
-                      {detailsExpanded ? 'Hide details' : 'Expand details'}
-                    </button>
-
-                    {detailsExpanded && (
-                      <div className="mt-3 space-y-2">
-                        {selectedRoutes.map((route) => (
-                          <div
-                            key={route.id}
-                            className="flex items-start gap-3 rounded-md border border-[#E0D8CC] bg-[#FDFBF6] px-3 py-2"
-                          >
-                            <span
-                              className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full"
-                              style={{ backgroundColor: MODE_STYLES[route.mode].color }}
-                            />
-                            <div className="min-w-0">
-                              <div className="text-sm font-semibold text-[#1C2A26]">{routeLabel(route)}</div>
-                              <div className="text-xs text-[#69746E]">
-                                {MODE_STYLES[route.mode].label}
-                                {route.month ? ` · ${route.month}` : ''}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
                 </div>
               ) : (
                 <p className="mt-3 text-sm leading-6 text-[#52605A]">
@@ -446,87 +404,70 @@ export default function Home() {
                       </strong>
                       curated photos
                     </div>
-                    <div>
-                      <strong className="block text-lg text-[#1C2A26]">
-                        {
-                          JOURNEYS.filter((journey) =>
-                            journey.countries.includes(galleryCountry?.country ?? '')
-                          ).length
-                        }
-                      </strong>
-                      journeys
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              {galleryCountry?.locations.map((location) => {
-                const photos = location.visits.flatMap((visit) => visit.photos);
-
-                return (
-                  <article
-                    key={location.id}
-                    className="overflow-hidden rounded-lg border border-[#CFC7BA] bg-[#FDFBF6] shadow-sm"
-                  >
-                    <div className="relative aspect-[16/10] bg-[#EFE8DC]">
-                      {location.coverPhoto ? (
-                        <Image
-                          src={location.coverPhoto}
-                          alt={location.coverCaption ?? location.name}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                        />
-                      ) : (
-                        <div className="grid h-full place-items-center px-6 text-center text-sm text-[#69746E]">
-                          Cover photo pending
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <h3 className="text-xl font-semibold text-[#16221F]">{location.name}</h3>
-                          <p className="mt-1 text-sm text-[#52605A]">{location.visitMonth}</p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedLocationId(location.id);
-                            setActiveView('globe');
-                          }}
-                          className="rounded-md border border-[#CFC7BA] px-3 py-1.5 text-xs font-semibold text-[#34413C] hover:bg-[#F0ECE4]"
-                        >
-                          Map
-                        </button>
+              {galleryCountry?.locations.map((location) => (
+                <article
+                  key={location.id}
+                  className="overflow-hidden rounded-lg border border-[#CFC7BA] bg-[#FDFBF6] shadow-sm"
+                >
+                  <div className="relative aspect-[16/10] bg-[#EFE8DC]">
+                    {location.coverPhoto ? (
+                      <Image
+                        src={location.coverPhoto}
+                        alt={location.coverCaption ?? location.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    ) : (
+                      <div className="grid h-full place-items-center px-6 text-center text-sm text-[#69746E]">
+                        Cover photo pending
                       </div>
+                    )}
+                  </div>
 
-                      {photos.length > 0 ? (
-                        <div className="mt-4 grid grid-cols-3 gap-2">
-                          {photos.map((photo) => (
-                            <div key={photo.src} className="relative aspect-square overflow-hidden rounded-md">
-                              <Image
-                                src={photo.src}
-                                alt={photo.caption}
-                                fill
-                                className="object-cover"
-                                sizes="140px"
-                              />
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="mt-4 rounded-md border border-dashed border-[#CFC7BA] px-3 py-4 text-sm text-[#69746E]">
-                          Photos can be added manually under this location without changing the data model.
-                        </div>
-                      )}
+                  <div className="p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="text-xl font-semibold text-[#16221F]">{location.name}</h3>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedLocationId(location.id);
+                          setActiveView('globe');
+                        }}
+                        className="rounded-md border border-[#CFC7BA] px-3 py-1.5 text-xs font-semibold text-[#34413C] hover:bg-[#F0ECE4]"
+                      >
+                        Map
+                      </button>
                     </div>
-                  </article>
-                );
-              })}
+
+                    {location.photos.length > 0 ? (
+                      <div className="mt-4 grid grid-cols-3 gap-2">
+                        {location.photos.map((photo) => (
+                          <div key={photo.src} className="relative aspect-square overflow-hidden rounded-md">
+                            <Image
+                              src={photo.src}
+                              alt={photo.caption}
+                              fill
+                              className="object-cover"
+                              sizes="140px"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="mt-4 rounded-md border border-dashed border-[#CFC7BA] px-3 py-4 text-sm text-[#69746E]">
+                        Photos can be added manually under this location without changing the data model.
+                      </div>
+                    )}
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
         </section>

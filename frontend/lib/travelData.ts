@@ -1,15 +1,7 @@
-export type TransportMode = "plane" | "train" | "bus" | "boat";
-
 export type TravelPhoto = {
   src: string;
   caption: string;
   date?: string;
-};
-
-export type Visit = {
-  id: string;
-  label: string;
-  photos: TravelPhoto[];
 };
 
 export type Location = {
@@ -20,9 +12,10 @@ export type Location = {
   coords: [number, number];
   coverPhoto?: string;
   coverCaption?: string;
-  visitMonth: string;
-  visits: Visit[];
+  photos: TravelPhoto[];
 };
+
+export type TransportMode = "plane" | "train" | "road" | "boat";
 
 export type RouteSegment = {
   id: string;
@@ -32,21 +25,11 @@ export type RouteSegment = {
   month?: string;
 };
 
-export type Journey = {
-  id: string;
-  title: string;
-  startMonth: string;
-  endMonth: string;
-  countries: string[];
-  segments: string[];
-  notes?: string;
-};
-
 export const MODE_STYLES: Record<TransportMode, { label: string; color: string }> = {
   plane: { label: "Plane", color: "#6EA8FE" },
   train: { label: "Train", color: "#4DD4AC" },
-  bus: { label: "Bus", color: "#F59E6B" },
-  boat: { label: "Boat", color: "#7DD3FC" },
+  road: { label: "Road", color: "#F59E6B" },
+  boat: { label: "Boat", color: "#ba4ddc" },
 };
 
 export const LOCATIONS: Location[] = [
@@ -56,8 +39,7 @@ export const LOCATIONS: Location[] = [
     country: "United States",
     region: "North America",
     coords: [-77.0369, 38.9072],
-    visitMonth: "Home base",
-    visits: [{ id: "washington-dc-home", label: "Home base", photos: [] }],
+    photos: [],
   },
   {
     id: "louisville",
@@ -65,22 +47,7 @@ export const LOCATIONS: Location[] = [
     country: "United States",
     region: "North America",
     coords: [-85.7585, 38.2527],
-    coverPhoto: "/photos/Louisville/1-30-26-salamanca.jpg",
-    coverCaption: "Louisville memory",
-    visitMonth: "Jan 2026",
-    visits: [
-      {
-        id: "louisville-2026",
-        label: "Jan 2026",
-        photos: [
-          {
-            src: "/photos/Louisville/1-30-26-salamanca.jpg",
-            caption: "Louisville memory",
-            date: "Jan 2026",
-          },
-        ],
-      },
-    ],
+    photos: [],
   },
   {
     id: "chicago",
@@ -88,8 +55,7 @@ export const LOCATIONS: Location[] = [
     country: "United States",
     region: "North America",
     coords: [-87.6298, 41.8781],
-    visitMonth: "United States travel",
-    visits: [{ id: "chicago-us-travel", label: "United States travel", photos: [] }],
+    photos: [],
   },
   {
     id: "west-lafayette",
@@ -97,8 +63,15 @@ export const LOCATIONS: Location[] = [
     country: "United States",
     region: "North America",
     coords: [-86.9081, 40.4259],
-    visitMonth: "United States travel",
-    visits: [{ id: "west-lafayette-us-travel", label: "United States travel", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "indianapolis",
+    name: "Indianapolis",
+    country: "United States",
+    region: "North America",
+    coords: [-86.1581, 39.7684],
+    photos: [],
   },
   {
     id: "seattle",
@@ -106,8 +79,7 @@ export const LOCATIONS: Location[] = [
     country: "United States",
     region: "North America",
     coords: [-122.3321, 47.6062],
-    visitMonth: "United States travel",
-    visits: [{ id: "seattle-us-travel", label: "United States travel", photos: [] }],
+    photos: [],
   },
   {
     id: "philadelphia",
@@ -115,8 +87,7 @@ export const LOCATIONS: Location[] = [
     country: "United States",
     region: "North America",
     coords: [-75.1652, 39.9526],
-    visitMonth: "United States travel",
-    visits: [{ id: "philadelphia-us-travel", label: "United States travel", photos: [] }],
+    photos: [],
   },
   {
     id: "nashville",
@@ -124,17 +95,15 @@ export const LOCATIONS: Location[] = [
     country: "United States",
     region: "North America",
     coords: [-86.7816, 36.1627],
-    visitMonth: "United States travel",
-    visits: [{ id: "nashville-us-travel", label: "United States travel", photos: [] }],
+    photos: [],
   },
   {
     id: "san-juan",
     name: "San Juan",
-    country: "Puerto Rico",
+    country: "United States",
     region: "North America",
     coords: [-66.1057, 18.4655],
-    visitMonth: "United States travel",
-    visits: [{ id: "san-juan-us-travel", label: "United States travel", photos: [] }],
+    photos: [],
   },
   {
     id: "tampa",
@@ -142,8 +111,71 @@ export const LOCATIONS: Location[] = [
     country: "United States",
     region: "North America",
     coords: [-82.4572, 27.9506],
-    visitMonth: "United States travel",
-    visits: [{ id: "tampa-us-travel", label: "United States travel", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "st. petersburg",
+    name: "St. Petersburg",
+    country: "United States",
+    region: "North America",
+    coords: [-82.6403, 27.7676],
+    photos: [],
+  },
+  {
+    id: "boston",
+    name: "Boston",
+    country: "United States",
+    region: "North America",
+    coords: [-71.0589, 42.3601],
+    photos: [],
+  },
+  {
+    id: "castine",
+    name: "Castine",
+    country: "United States",
+    region: "North America",
+    coords: [-68.7998, 44.3879],
+    photos: [],
+  },
+  {
+    id: "gainesville",
+    name: "Gainesville",
+    country: "United States",
+    region: "North America",
+    coords: [-82.3248, 29.6516],
+    photos: [],
+  },
+  {
+    id: "corolla",
+    name: "Corolla",
+    country: "United States",
+    region: "North America",
+    coords: [-75.8308, 36.3807],
+    photos: [],
+  },
+  {
+    id: "hanover-nh",
+    name: "Hanover, NH",
+    country: "United States",
+    region: "North America",
+    coords: [-72.2896, 43.7022],
+    photos: [],
+  },
+  {
+    id: "deep-creek",
+    name: "Deep Creek",
+    country: "United States",
+    region: "North America",
+    coords: [-79.3817, 39.4926],
+    photos: [],
+  },
+  {
+    id: "north-conway",
+    name: "North Conway",
+    country: "United States",
+    region: "North America",
+    coords: [-71.1284, 44.0537],
+    photos: [],
   },
   {
     id: "madrid",
@@ -151,21 +183,7 @@ export const LOCATIONS: Location[] = [
     country: "Spain",
     region: "Europe",
     coords: [-3.7038, 40.4168],
-    coverPhoto: "/photos/Madrid/atletico-game.jpg",
-    coverCaption: "Atletico Madrid match",
-    visitMonth: "Study abroad",
-    visits: [
-      {
-        id: "madrid-study-abroad",
-        label: "Study abroad",
-        photos: [
-          {
-            src: "/photos/Madrid/atletico-game.jpg",
-            caption: "Atletico Madrid v Bodo Glimt",
-          },
-        ],
-      },
-    ],
+    photos: [],
   },
   {
     id: "barcelona",
@@ -173,8 +191,39 @@ export const LOCATIONS: Location[] = [
     country: "Spain",
     region: "Europe",
     coords: [2.1734, 41.3851],
-    visitMonth: "Summer 2023",
-    visits: [{ id: "barcelona-2023", label: "Summer 2023", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "bilbao",
+    name: "Bilbao",
+    country: "Spain",
+    region: "Europe",
+    coords: [-2.935, 43.263],
+    photos: [],
+  },
+  {
+    id: "salamanca",
+    name: "Salamanca",
+    country: "Spain",
+    region: "Europe",
+    coords: [-5.6635, 40.9701],
+    photos: [],
+  },
+  {
+    id: "segovia",
+    name: "Segovia",
+    country: "Spain",
+    region: "Europe",
+    coords: [-4.1088, 40.9429],
+    photos: [],
+  },
+  {
+    id: "toledo",
+    name: "Toledo",
+    country: "Spain",
+    region: "Europe",
+    coords: [-4.0273, 39.8628],
+    photos: [],
   },
   {
     id: "marseille",
@@ -182,17 +231,15 @@ export const LOCATIONS: Location[] = [
     country: "France",
     region: "Europe",
     coords: [5.3698, 43.2965],
-    visitMonth: "Summer 2023",
-    visits: [{ id: "marseille-2023", label: "Summer 2023", photos: [] }],
+    photos: [],
   },
   {
-    id: "nice",
-    name: "Nice",
+    id: "antibes",
+    name: "Antibes",
     country: "France",
     region: "Europe",
-    coords: [7.262, 43.7102],
-    visitMonth: "Summer 2023",
-    visits: [{ id: "nice-2023", label: "Summer 2023", photos: [] }],
+    coords: [7.1251, 43.5804],
+    photos: [],
   },
   {
     id: "bolzano",
@@ -200,8 +247,7 @@ export const LOCATIONS: Location[] = [
     country: "Italy",
     region: "Europe",
     coords: [11.3548, 46.4983],
-    visitMonth: "Summer 2023",
-    visits: [{ id: "bolzano-2023", label: "Summer 2023", photos: [] }],
+    photos: [],
   },
   {
     id: "venice",
@@ -209,8 +255,7 @@ export const LOCATIONS: Location[] = [
     country: "Italy",
     region: "Europe",
     coords: [12.3155, 45.4408],
-    visitMonth: "Summer 2023",
-    visits: [{ id: "venice-2023", label: "Summer 2023", photos: [] }],
+    photos: [],
   },
   {
     id: "ljubljana",
@@ -218,8 +263,7 @@ export const LOCATIONS: Location[] = [
     country: "Slovenia",
     region: "Europe",
     coords: [14.5058, 46.0569],
-    visitMonth: "Summer 2023",
-    visits: [{ id: "ljubljana-2023", label: "Summer 2023", photos: [] }],
+    photos: [],
   },
   {
     id: "lake-bled",
@@ -227,8 +271,7 @@ export const LOCATIONS: Location[] = [
     country: "Slovenia",
     region: "Europe",
     coords: [14.0946, 46.3632],
-    visitMonth: "Summer 2023",
-    visits: [{ id: "lake-bled-2023", label: "Summer 2023", photos: [] }],
+    photos: [],
   },
   {
     id: "zagreb",
@@ -236,8 +279,7 @@ export const LOCATIONS: Location[] = [
     country: "Croatia",
     region: "Europe",
     coords: [15.9819, 45.815],
-    visitMonth: "Summer 2023",
-    visits: [{ id: "zagreb-2023", label: "Summer 2023", photos: [] }],
+    photos: [],
   },
   {
     id: "london",
@@ -245,8 +287,15 @@ export const LOCATIONS: Location[] = [
     country: "United Kingdom",
     region: "Europe",
     coords: [-0.1276, 51.5072],
-    visitMonth: "Europe",
-    visits: [{ id: "london-europe", label: "Europe", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "cambridge",
+    name: "Cambridge",
+    country: "United Kingdom",
+    region: "Europe",
+    coords: [0.1218, 52.2053],
+    photos: [],
   },
   {
     id: "edinburgh",
@@ -254,8 +303,15 @@ export const LOCATIONS: Location[] = [
     country: "United Kingdom",
     region: "Europe",
     coords: [-3.1883, 55.9533],
-    visitMonth: "Europe",
-    visits: [{ id: "edinburgh-europe", label: "Europe", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "st-andrews",
+    name: "St. Andrews",
+    country: "United Kingdom",
+    region: "Europe",
+    coords: [-2.7967, 56.3398],
+    photos: [],
   },
   {
     id: "paris",
@@ -263,8 +319,23 @@ export const LOCATIONS: Location[] = [
     country: "France",
     region: "Europe",
     coords: [2.3522, 48.8566],
-    visitMonth: "Europe",
-    visits: [{ id: "paris-europe", label: "Europe", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "monaco",
+    name: "Monaco",
+    country: "Monaco",
+    region: "Europe",
+    coords: [7.4246, 43.7384],
+    photos: [],
+  },
+  {
+    id: "versailles",
+    name: "Versailles",
+    country: "France",
+    region: "Europe",
+    coords: [2.1301, 48.8014],
+    photos: [],
   },
   {
     id: "budapest",
@@ -272,8 +343,7 @@ export const LOCATIONS: Location[] = [
     country: "Hungary",
     region: "Europe",
     coords: [19.0402, 47.4979],
-    visitMonth: "Study abroad",
-    visits: [{ id: "budapest-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
   },
   {
     id: "zurich",
@@ -281,8 +351,7 @@ export const LOCATIONS: Location[] = [
     country: "Switzerland",
     region: "Europe",
     coords: [8.5417, 47.3769],
-    visitMonth: "Study abroad",
-    visits: [{ id: "zurich-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
   },
   {
     id: "st-anton",
@@ -290,8 +359,7 @@ export const LOCATIONS: Location[] = [
     country: "Austria",
     region: "Europe",
     coords: [10.2647, 47.1296],
-    visitMonth: "Study abroad",
-    visits: [{ id: "st-anton-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
   },
   {
     id: "lisbon",
@@ -299,8 +367,15 @@ export const LOCATIONS: Location[] = [
     country: "Portugal",
     region: "Europe",
     coords: [-9.1393, 38.7223],
-    visitMonth: "Study abroad",
-    visits: [{ id: "lisbon-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "sintra",
+    name: "Sintra",
+    country: "Portugal",
+    region: "Europe",
+    coords: [-9.3817, 38.8029],
+    photos: [],
   },
   {
     id: "tirana",
@@ -308,8 +383,15 @@ export const LOCATIONS: Location[] = [
     country: "Albania",
     region: "Europe",
     coords: [19.8187, 41.3275],
-    visitMonth: "Study abroad",
-    visits: [{ id: "tirana-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "berat",
+    name: "Berat",
+    country: "Albania",
+    region: "Europe",
+    coords: [19.9522, 40.7058],
+    photos: [],
   },
   {
     id: "dublin",
@@ -317,8 +399,15 @@ export const LOCATIONS: Location[] = [
     country: "Ireland",
     region: "Europe",
     coords: [-6.2603, 53.3498],
-    visitMonth: "Study abroad",
-    visits: [{ id: "dublin-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "dingle",
+    name: "Dingle",
+    country: "Ireland",
+    region: "Europe",
+    coords: [-10.2717, 52.1409],
+    photos: [],
   },
   {
     id: "split",
@@ -326,8 +415,7 @@ export const LOCATIONS: Location[] = [
     country: "Croatia",
     region: "Europe",
     coords: [16.4402, 43.5081],
-    visitMonth: "Study abroad",
-    visits: [{ id: "split-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
   },
   {
     id: "mostar",
@@ -335,8 +423,7 @@ export const LOCATIONS: Location[] = [
     country: "Bosnia and Herzegovina",
     region: "Europe",
     coords: [17.8078, 43.3438],
-    visitMonth: "Study abroad",
-    visits: [{ id: "mostar-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
   },
   {
     id: "dubrovnik",
@@ -344,8 +431,7 @@ export const LOCATIONS: Location[] = [
     country: "Croatia",
     region: "Europe",
     coords: [18.0944, 42.6507],
-    visitMonth: "Study abroad",
-    visits: [{ id: "dubrovnik-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
   },
   {
     id: "kotor",
@@ -353,8 +439,7 @@ export const LOCATIONS: Location[] = [
     country: "Montenegro",
     region: "Europe",
     coords: [18.7712, 42.4247],
-    visitMonth: "Study abroad",
-    visits: [{ id: "kotor-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
   },
   {
     id: "marrakech",
@@ -362,8 +447,7 @@ export const LOCATIONS: Location[] = [
     country: "Morocco",
     region: "North Africa",
     coords: [-7.9811, 31.6295],
-    visitMonth: "Study abroad",
-    visits: [{ id: "marrakech-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
   },
   {
     id: "porto",
@@ -371,8 +455,15 @@ export const LOCATIONS: Location[] = [
     country: "Portugal",
     region: "Europe",
     coords: [-8.6291, 41.1579],
-    visitMonth: "Study abroad",
-    visits: [{ id: "porto-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "aveiro",
+    name: "Aveiro",
+    country: "Portugal",
+    region: "Europe",
+    coords: [-8.6538, 40.6405],
+    photos: [],
   },
   {
     id: "valencia",
@@ -380,8 +471,31 @@ export const LOCATIONS: Location[] = [
     country: "Spain",
     region: "Europe",
     coords: [-0.3763, 39.4699],
-    visitMonth: "Study abroad",
-    visits: [{ id: "valencia-study-abroad", label: "Study abroad", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "munich",
+    name: "Munich",
+    country: "Germany",
+    region: "Europe",
+    coords: [11.582, 48.1351],
+    photos: [],
+  },
+  {
+    id: "nuremberg",
+    name: "Nuremberg",
+    country: "Germany",
+    region: "Europe",
+    coords: [11.0767, 49.4521],
+    photos: [],
+  },
+  {
+    id: "galway",
+    name: "Galway",
+    country: "Ireland",
+    region: "Europe",
+    coords: [-9.0568, 53.2707],
+    photos: [],
   },
   {
     id: "buenos-aires",
@@ -389,8 +503,7 @@ export const LOCATIONS: Location[] = [
     country: "Argentina",
     region: "South America",
     coords: [-58.3816, -34.6037],
-    visitMonth: "Dec 2024",
-    visits: [{ id: "buenos-aires-2024", label: "Dec 2024", photos: [] }],
+    photos: [],
   },
   {
     id: "santiago",
@@ -398,8 +511,23 @@ export const LOCATIONS: Location[] = [
     country: "Chile",
     region: "South America",
     coords: [-70.6693, -33.4489],
-    visitMonth: "Jan 2025",
-    visits: [{ id: "santiago-2025", label: "Jan 2025", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "valparaiso",
+    name: "Valparaiso",
+    country: "Chile",
+    region: "South America",
+    coords: [-71.6127, -33.0472],
+    photos: [],
+  },
+  {
+    id: "olmue",
+    name: "Olmue",
+    country: "Chile",
+    region: "South America",
+    coords: [-71.1867, -32.9958],
+    photos: [],
   },
   {
     id: "montevideo",
@@ -407,8 +535,15 @@ export const LOCATIONS: Location[] = [
     country: "Uruguay",
     region: "South America",
     coords: [-56.1645, -34.9011],
-    visitMonth: "Jan 2025",
-    visits: [{ id: "montevideo-2025", label: "Jan 2025", photos: [] }],
+    photos: [],
+  },
+  {
+    id: "colonia-del-sacramento",
+    name: "Colonia del Sacramento",
+    country: "Uruguay",
+    region: "South America",
+    coords: [-57.8439, -34.4714],
+    photos: [],
   },
   {
     id: "lima",
@@ -416,8 +551,7 @@ export const LOCATIONS: Location[] = [
     country: "Peru",
     region: "South America",
     coords: [-77.0428, -12.0464],
-    visitMonth: "May 2025",
-    visits: [{ id: "lima-2025", label: "May 2025", photos: [] }],
+    photos: [],
   },
   {
     id: "cusco",
@@ -425,8 +559,7 @@ export const LOCATIONS: Location[] = [
     country: "Peru",
     region: "South America",
     coords: [-71.9675, -13.5319],
-    visitMonth: "May 2025",
-    visits: [{ id: "cusco-2025", label: "May 2025", photos: [] }],
+    photos: [],
   },
   {
     id: "arequipa",
@@ -434,8 +567,7 @@ export const LOCATIONS: Location[] = [
     country: "Peru",
     region: "South America",
     coords: [-71.5375, -16.409],
-    visitMonth: "May 2025",
-    visits: [{ id: "arequipa-2025", label: "May 2025", photos: [] }],
+    photos: [],
   },
   {
     id: "bangkok",
@@ -443,8 +575,7 @@ export const LOCATIONS: Location[] = [
     country: "Thailand",
     region: "Southeast Asia",
     coords: [100.5018, 13.7563],
-    visitMonth: "Summer 2024",
-    visits: [{ id: "bangkok-2024", label: "Summer 2024", photos: [] }],
+    photos: [],
   },
   {
     id: "siem-reap",
@@ -452,8 +583,7 @@ export const LOCATIONS: Location[] = [
     country: "Cambodia",
     region: "Southeast Asia",
     coords: [103.8564, 13.3633],
-    visitMonth: "Summer 2024",
-    visits: [{ id: "siem-reap-2024", label: "Summer 2024", photos: [] }],
+    photos: [],
   },
   {
     id: "phnom-penh",
@@ -461,8 +591,7 @@ export const LOCATIONS: Location[] = [
     country: "Cambodia",
     region: "Southeast Asia",
     coords: [104.9282, 11.5564],
-    visitMonth: "Summer 2024",
-    visits: [{ id: "phnom-penh-2024", label: "Summer 2024", photos: [] }],
+    photos: [],
   },
   {
     id: "ho-chi-minh-city",
@@ -470,8 +599,7 @@ export const LOCATIONS: Location[] = [
     country: "Vietnam",
     region: "Southeast Asia",
     coords: [106.6297, 10.8231],
-    visitMonth: "Summer 2024",
-    visits: [{ id: "ho-chi-minh-city-2024", label: "Summer 2024", photos: [] }],
+    photos: [],
   },
   {
     id: "ninh-binh",
@@ -479,8 +607,7 @@ export const LOCATIONS: Location[] = [
     country: "Vietnam",
     region: "Southeast Asia",
     coords: [105.9745, 20.2506],
-    visitMonth: "Summer 2024",
-    visits: [{ id: "ninh-binh-2024", label: "Summer 2024", photos: [] }],
+    photos: [],
   },
   {
     id: "hoi-an",
@@ -488,8 +615,7 @@ export const LOCATIONS: Location[] = [
     country: "Vietnam",
     region: "Southeast Asia",
     coords: [108.338, 15.8801],
-    visitMonth: "Summer 2024",
-    visits: [{ id: "hoi-an-2024", label: "Summer 2024", photos: [] }],
+    photos: [],
   },
   {
     id: "hanoi",
@@ -497,19 +623,21 @@ export const LOCATIONS: Location[] = [
     country: "Vietnam",
     region: "Southeast Asia",
     coords: [105.8342, 21.0278],
-    visitMonth: "Summer 2024",
-    visits: [{ id: "hanoi-2024", label: "Summer 2024", photos: [] }],
+    photos: [],
   },
 ];
 
 export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "dc-buenos-aires", origin: "washington-dc", destination: "buenos-aires", mode: "plane", month: "Dec 2024" },
   { id: "buenos-aires-santiago", origin: "buenos-aires", destination: "santiago", mode: "plane", month: "Jan 2025" },
+  { id: "santiago-valparaiso", origin: "santiago", destination: "valparaiso", mode: "road", month: "Jan 2025" },
+  { id: "valparaiso-olmue", origin: "valparaiso", destination: "olmue", mode: "road", month: "Jan 2025" },
   { id: "buenos-aires-montevideo", origin: "buenos-aires", destination: "montevideo", mode: "boat", month: "Jan 2025" },
+  { id: "montevideo-colonia-del-sacramento", origin: "montevideo", destination: "colonia-del-sacramento", mode: "road", month: "Jan 2025" },
   { id: "santiago-dc", origin: "santiago", destination: "washington-dc", mode: "plane", month: "Jan 2025" },
   { id: "louisville-lima", origin: "louisville", destination: "lima", mode: "plane", month: "May 2025" },
   { id: "lima-cusco", origin: "lima", destination: "cusco", mode: "plane", month: "May 2025" },
-  { id: "cusco-arequipa", origin: "cusco", destination: "arequipa", mode: "bus", month: "May 2025" },
+  { id: "cusco-arequipa", origin: "cusco", destination: "arequipa", mode: "plane", month: "May 2025" },
   { id: "arequipa-lima", origin: "arequipa", destination: "lima", mode: "plane", month: "May 2025" },
   { id: "dc-madrid", origin: "washington-dc", destination: "madrid", mode: "plane", month: "Study abroad" },
   { id: "madrid-budapest", origin: "madrid", destination: "budapest", mode: "plane", month: "Study abroad" },
@@ -517,20 +645,29 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "madrid-zurich", origin: "madrid", destination: "zurich", mode: "plane", month: "Study abroad" },
   { id: "zurich-st-anton", origin: "zurich", destination: "st-anton", mode: "train", month: "Study abroad" },
   { id: "madrid-lisbon", origin: "madrid", destination: "lisbon", mode: "plane", month: "Study abroad" },
+  { id: "lisbon-sintra", origin: "lisbon", destination: "sintra", mode: "train", month: "Study abroad" },
   { id: "madrid-tirana", origin: "madrid", destination: "tirana", mode: "plane", month: "Study abroad" },
+  { id: "tirana-berat", origin: "tirana", destination: "berat", mode: "road", month: "Study abroad" },
   { id: "madrid-dublin", origin: "madrid", destination: "dublin", mode: "plane", month: "Study abroad" },
+  { id: "dublin-dingle", origin: "dublin", destination: "dingle", mode: "road", month: "Study abroad" },
   { id: "madrid-split", origin: "madrid", destination: "split", mode: "plane", month: "Study abroad" },
-  { id: "split-mostar", origin: "split", destination: "mostar", mode: "bus", month: "Study abroad" },
-  { id: "mostar-dubrovnik", origin: "mostar", destination: "dubrovnik", mode: "bus", month: "Study abroad" },
-  { id: "dubrovnik-kotor", origin: "dubrovnik", destination: "kotor", mode: "bus", month: "Study abroad" },
+  { id: "split-mostar", origin: "split", destination: "mostar", mode: "road", month: "Study abroad" },
+  { id: "mostar-dubrovnik", origin: "mostar", destination: "dubrovnik", mode: "road", month: "Study abroad" },
+  { id: "dubrovnik-kotor", origin: "dubrovnik", destination: "kotor", mode: "road", month: "Study abroad" },
   { id: "kotor-madrid", origin: "kotor", destination: "madrid", mode: "plane", month: "Study abroad" },
   { id: "madrid-marrakech", origin: "madrid", destination: "marrakech", mode: "plane", month: "Study abroad" },
   { id: "madrid-porto", origin: "madrid", destination: "porto", mode: "plane", month: "Study abroad" },
+  { id: "porto-aveiro", origin: "porto", destination: "aveiro", mode: "train", month: "Study abroad" },
   { id: "madrid-valencia", origin: "madrid", destination: "valencia", mode: "train", month: "Study abroad" },
+  { id: "madrid-bilbao", origin: "madrid", destination: "bilbao", mode: "plane", month: "Study abroad" },
+  { id: "madrid-salamanca", origin: "madrid", destination: "salamanca", mode: "train", month: "Study abroad" },
+  { id: "madrid-segovia", origin: "madrid", destination: "segovia", mode: "train", month: "Study abroad" },
+  { id: "madrid-toledo", origin: "madrid", destination: "toledo", mode: "road", month: "Study abroad" },
   { id: "dc-barcelona", origin: "washington-dc", destination: "barcelona", mode: "plane", month: "Summer 2023" },
   { id: "barcelona-marseille", origin: "barcelona", destination: "marseille", mode: "train", month: "Summer 2023" },
-  { id: "marseille-nice", origin: "marseille", destination: "nice", mode: "train", month: "Summer 2023" },
-  { id: "nice-bolzano", origin: "nice", destination: "bolzano", mode: "train", month: "Summer 2023" },
+  { id: "marseille-antibes", origin: "marseille", destination: "antibes", mode: "train", month: "Summer 2023" },
+  { id: "antibes-monaco", origin: "antibes", destination: "monaco", mode: "train", month: "Summer 2023" },
+  { id: "antibes-bolzano", origin: "antibes", destination: "bolzano", mode: "train", month: "Summer 2023" },
   { id: "bolzano-venice", origin: "bolzano", destination: "venice", mode: "train", month: "Summer 2023" },
   { id: "venice-ljubljana", origin: "venice", destination: "ljubljana", mode: "train", month: "Summer 2023" },
   { id: "ljubljana-lake-bled", origin: "ljubljana", destination: "lake-bled", mode: "train", month: "Summer 2023" },
@@ -538,17 +675,28 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "zagreb-dc", origin: "zagreb", destination: "washington-dc", mode: "plane", month: "Summer 2023" },
   { id: "dc-london", origin: "washington-dc", destination: "london", mode: "plane" },
   { id: "london-edinburgh", origin: "london", destination: "edinburgh", mode: "train" },
+  { id: "edinburgh-st-andrews", origin: "edinburgh", destination: "st-andrews", mode: "road" },
+  { id: "london-cambridge", origin: "london", destination: "cambridge", mode: "road" },
   { id: "dc-paris", origin: "washington-dc", destination: "paris", mode: "plane" },
+  { id: "paris-versailles", origin: "paris", destination: "versailles", mode: "train" },
   { id: "dc-bangkok", origin: "washington-dc", destination: "bangkok", mode: "plane", month: "Summer 2024" },
   { id: "bangkok-siem-reap", origin: "bangkok", destination: "siem-reap", mode: "plane", month: "Summer 2024" },
-  { id: "siem-reap-phnom-penh", origin: "siem-reap", destination: "phnom-penh", mode: "bus", month: "Summer 2024" },
-  { id: "phnom-penh-ho-chi-minh-city", origin: "phnom-penh", destination: "ho-chi-minh-city", mode: "bus", month: "Summer 2024" },
+  { id: "siem-reap-phnom-penh", origin: "siem-reap", destination: "phnom-penh", mode: "road", month: "Summer 2024" },
+  { id: "phnom-penh-ho-chi-minh-city", origin: "phnom-penh", destination: "ho-chi-minh-city", mode: "plane", month: "Summer 2024" },
   { id: "ho-chi-minh-city-hoi-an", origin: "ho-chi-minh-city", destination: "hoi-an", mode: "plane", month: "Summer 2024" },
-  { id: "hoi-an-ninh-binh", origin: "hoi-an", destination: "ninh-binh", mode: "bus", month: "Summer 2024" },
-  { id: "ninh-binh-hanoi", origin: "ninh-binh", destination: "hanoi", mode: "bus", month: "Summer 2024" },
+  { id: "hoi-an-ninh-binh", origin: "hoi-an", destination: "ninh-binh", mode: "road", month: "Summer 2024" },
+  { id: "ninh-binh-hanoi", origin: "ninh-binh", destination: "hanoi", mode: "road", month: "Summer 2024" },
   { id: "hanoi-dc", origin: "hanoi", destination: "washington-dc", mode: "plane", month: "Summer 2024" },
   { id: "dc-chicago", origin: "washington-dc", destination: "chicago", mode: "plane" },
   { id: "dc-west-lafayette", origin: "washington-dc", destination: "west-lafayette", mode: "plane" },
+  { id: "dc-boston", origin: "washington-dc", destination: "boston", mode: "road" },
+  { id: "dc-indianapolis", origin: "washington-dc", destination: "indianapolis", mode: "plane" },
+  { id: "indianapolis-west-lafayette", origin: "indianapolis", destination: "west-lafayette", mode: "road" },
+  { id: "dc-castine", origin: "washington-dc", destination: "castine", mode: "road" },
+  { id: "dc-corolla", origin: "washington-dc", destination: "corolla", mode: "road" },
+  { id: "dc-hanover-nh", origin: "washington-dc", destination: "hanover-nh", mode: "road" },
+  { id: "dc-deep-creek", origin: "washington-dc", destination: "deep-creek", mode: "road" },
+  { id: "dc-north-conway", origin: "washington-dc", destination: "north-conway", mode: "road" },
   { id: "dc-seattle", origin: "washington-dc", destination: "seattle", mode: "plane" },
   { id: "dc-philadelphia", origin: "washington-dc", destination: "philadelphia", mode: "plane" },
   { id: "west-lafayette-nashville", origin: "west-lafayette", destination: "nashville", mode: "plane" },
@@ -556,120 +704,14 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "west-lafayette-san-juan", origin: "west-lafayette", destination: "san-juan", mode: "plane" },
   { id: "louisville-seattle", origin: "louisville", destination: "seattle", mode: "plane" },
   { id: "dc-tampa", origin: "washington-dc", destination: "tampa", mode: "plane" },
+  { id: "tampa-gainesville", origin: "tampa", destination: "gainesville", mode: "road" },
   { id: "west-lafayette-tampa", origin: "west-lafayette", destination: "tampa", mode: "plane" },
   { id: "louisville-tampa", origin: "louisville", destination: "tampa", mode: "plane" },
-];
-
-export const JOURNEYS: Journey[] = [
-  {
-    id: "south-america-new-year",
-    title: "South America New Year",
-    startMonth: "Dec 2024",
-    endMonth: "Jan 2025",
-    countries: ["Argentina", "Chile", "Uruguay"],
-    segments: ["dc-buenos-aires", "buenos-aires-santiago", "buenos-aires-montevideo", "santiago-dc"],
-  },
-  {
-    id: "peru-2025",
-    title: "Peru and Machu Picchu",
-    startMonth: "May 2025",
-    endMonth: "May 2025",
-    countries: ["Peru"],
-    segments: ["louisville-lima", "lima-cusco", "cusco-arequipa", "arequipa-lima"],
-  },
-  {
-    id: "europe-study-abroad",
-    title: "Europe Study Abroad",
-    startMonth: "Study abroad",
-    endMonth: "Study abroad",
-    countries: [
-      "Spain",
-      "Hungary",
-      "United Kingdom",
-      "Switzerland",
-      "Austria",
-      "Portugal",
-      "Albania",
-      "Ireland",
-      "Croatia",
-      "Bosnia and Herzegovina",
-      "Montenegro",
-      "Morocco",
-    ],
-    segments: [
-      "dc-madrid",
-      "madrid-budapest",
-      "madrid-edinburgh",
-      "madrid-zurich",
-      "zurich-st-anton",
-      "madrid-lisbon",
-      "madrid-tirana",
-      "madrid-dublin",
-      "madrid-split",
-      "split-mostar",
-      "mostar-dubrovnik",
-      "dubrovnik-kotor",
-      "kotor-madrid",
-      "madrid-marrakech",
-      "madrid-porto",
-      "madrid-valencia",
-    ],
-  },
-  {
-    id: "europe-summer-2023",
-    title: "Europe Summer 2023",
-    startMonth: "Summer 2023",
-    endMonth: "Summer 2023",
-    countries: ["Spain", "France", "Italy", "Slovenia", "Croatia"],
-    segments: [
-      "dc-barcelona",
-      "barcelona-marseille",
-      "marseille-nice",
-      "nice-bolzano",
-      "bolzano-venice",
-      "venice-ljubljana",
-      "ljubljana-lake-bled",
-      "ljubljana-zagreb",
-      "zagreb-dc",
-    ],
-  },
-  {
-    id: "southeast-asia-2024",
-    title: "Southeast Asia Summer 2024",
-    startMonth: "Summer 2024",
-    endMonth: "Summer 2024",
-    countries: ["Thailand", "Cambodia", "Vietnam"],
-    segments: [
-      "dc-bangkok",
-      "bangkok-siem-reap",
-      "siem-reap-phnom-penh",
-      "phnom-penh-ho-chi-minh-city",
-      "ho-chi-minh-city-hoi-an",
-      "hoi-an-ninh-binh",
-      "ninh-binh-hanoi",
-      "hanoi-dc",
-    ],
-  },
-  {
-    id: "united-states-travel",
-    title: "United States Travel",
-    startMonth: "Various",
-    endMonth: "Various",
-    countries: ["United States", "Puerto Rico"],
-    segments: [
-      "dc-chicago",
-      "dc-west-lafayette",
-      "dc-seattle",
-      "dc-philadelphia",
-      "west-lafayette-nashville",
-      "dc-louisville",
-      "west-lafayette-san-juan",
-      "louisville-seattle",
-      "dc-tampa",
-      "west-lafayette-tampa",
-      "louisville-tampa",
-    ],
-  },
+  { id: "madrid-munich", origin: "madrid", destination: "munich", mode: "plane" },
+  { id: "munich-nuremberg", origin: "munich", destination: "nuremberg", mode: "train" },
+  { id: "dingle-galway", origin: "dingle", destination: "galway", mode: "road" },
+  { id: "galway-dublin", origin: "galway", destination: "dublin", mode: "road" },
+  { id: "tampa-st. petersburg", origin: "tampa", destination: "st. petersburg", mode: "road" },
 ];
 
 export const LOCATION_BY_ID = Object.fromEntries(LOCATIONS.map((location) => [location.id, location]));
