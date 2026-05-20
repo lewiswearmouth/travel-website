@@ -118,9 +118,8 @@ export default function Home() {
 
   return (
     <main
-      className={`bg-[#F7F4ED] text-[#18211F] ${
-        activeView === 'globe' ? 'h-screen overflow-hidden' : 'min-h-screen'
-      }`}
+      className={`bg-[#F7F4ED] text-[#18211F] ${activeView === 'globe' ? 'h-screen overflow-hidden' : 'min-h-screen'
+        }`}
     >
       <header className="border-b border-[#D8D0C3] bg-[#FDFBF6]/95">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8">
@@ -130,7 +129,7 @@ export default function Home() {
                 Personal travel atlas
               </p>
               <h1 className="mt-2 text-3xl font-semibold tracking-normal text-[#16221F] sm:text-4xl">
-                Places, routes, and memories
+                A small collection of my travels
               </h1>
             </div>
 
@@ -140,11 +139,10 @@ export default function Home() {
                   key={view}
                   type="button"
                   onClick={() => setActiveView(view)}
-                  className={`rounded-md px-4 py-2 text-sm font-semibold transition ${
-                    activeView === view
-                      ? 'bg-[#1F5E55] text-white shadow-sm'
-                      : 'text-[#4E5A55] hover:bg-[#F0ECE4]'
-                  }`}
+                  className={`rounded-md px-4 py-2 text-sm font-semibold transition ${activeView === view
+                    ? 'bg-[#1F5E55] text-white shadow-sm'
+                    : 'text-[#4E5A55] hover:bg-[#F0ECE4]'
+                    }`}
                 >
                   {view === 'globe' ? 'Globe' : 'Gallery'}
                 </button>
@@ -231,11 +229,10 @@ export default function Home() {
                           setSelectedLocationId(location.id);
                           setDetailsExpanded(false);
                         }}
-                        className={`group relative grid h-8 w-8 place-items-center text-2xl drop-shadow-lg transition ${
-                          active
-                            ? 'scale-125'
-                            : 'hover:scale-125'
-                        }`}
+                        className={`group relative grid h-8 w-8 place-items-center text-2xl drop-shadow-lg transition ${active
+                          ? 'scale-125'
+                          : 'hover:scale-125'
+                          }`}
                         aria-label={`Select ${location.name}`}
                       >
                         📍
@@ -308,21 +305,21 @@ export default function Home() {
                       Photo
                     </p>
                     <div className="overflow-hidden rounded-md border border-[#DDD5CA] bg-[#EFE8DC]">
-                    {selectedLocation.coverPhoto ? (
-                      <div className="relative aspect-[16/10]">
-                        <Image
-                          src={selectedLocation.coverPhoto}
-                          alt={selectedLocation.coverCaption ?? selectedLocation.name}
-                          fill
-                          className="object-cover"
-                          sizes="360px"
-                        />
-                      </div>
-                    ) : (
-                      <div className="grid aspect-[4/3] place-items-center px-6 text-center text-sm text-[#69746E]">
-                        Cover photo pending
-                      </div>
-                    )}
+                      {selectedLocation.coverPhoto ? (
+                        <div className="relative aspect-[16/10]">
+                          <Image
+                            src={selectedLocation.coverPhoto}
+                            alt={selectedLocation.coverCaption ?? selectedLocation.name}
+                            fill
+                            className="object-cover"
+                            sizes="360px"
+                          />
+                        </div>
+                      ) : (
+                        <div className="grid aspect-[4/3] place-items-center px-6 text-center text-sm text-[#69746E]">
+                          Cover photo pending
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -397,11 +394,10 @@ export default function Home() {
                   key={country.country}
                   type="button"
                   onClick={() => setSelectedCountry(country.country)}
-                  className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition ${
-                    selectedCountry === country.country
-                      ? 'bg-[#1F5E55] text-white'
-                      : 'text-[#34413C] hover:bg-[#F0ECE4]'
-                  }`}
+                  className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition ${selectedCountry === country.country
+                    ? 'bg-[#1F5E55] text-white'
+                    : 'text-[#34413C] hover:bg-[#F0ECE4]'
+                    }`}
                 >
                   <span className="font-semibold">{country.country}</span>
                   <span className="text-xs opacity-80">
