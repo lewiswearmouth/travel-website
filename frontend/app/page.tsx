@@ -4,10 +4,11 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type { Map as MapboxMap } from 'mapbox-gl';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Layer, MapRef, Marker, Source } from '@vis.gl/react-mapbox';
 
+import { COUNTRY_PHOTO_ALBUMS, CountryPhoto } from '@/lib/photos';
 import {
   LOCATION_BY_ID,
   LOCATIONS,
@@ -21,6 +22,12 @@ const Map = dynamic(() => import('@vis.gl/react-mapbox').then((m) => m.Map), {
 });
 
 type ActiveView = 'globe' | 'gallery';
+
+type GalleryPhoto = CountryPhoto & {
+  src: string;
+  caption: string;
+  locationName?: string;
+};
 
 function locationLabel(location: { name: string; country: string }) {
   return `${location.name}, ${location.country}`;
@@ -48,10 +55,19 @@ function applyMapAtmosphere(map: MapboxMap) {
   });
 }
 
+function captionFromFile(file: string) {
+  return file
+    .replace(/\.[^.]+$/, '')
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 export default function Home() {
   const [activeView, setActiveView] = useState<ActiveView>('globe');
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string>('Spain');
+  const [selectedGalleryLocationId, setSelectedGalleryLocationId] = useState<string | null>(null);
+  const [expandedPhotoIndex, setExpandedPhotoIndex] = useState<number | null>(null);
   const [hoveredRouteId, setHoveredRouteId] = useState<string | null>(null);
   const [mapRef, setMapRef] = useState<MapRef | null>(null);
 
@@ -103,17 +119,70 @@ export default function Home() {
       .map(([country, locations]) => ({
         country,
         locations: locations.sort((a, b) => a.name.localeCompare(b.name)),
-        photoCount: locations.reduce(
-          (count, location) => count + location.photos.length,
-          0
-        ),
-        coverPhoto: locations.find((location) => location.coverPhoto)?.coverPhoto,
       }))
+      .map(({ country, locations }) => {
+        const album = COUNTRY_PHOTO_ALBUMS[country];
+        const photos: GalleryPhoto[] = (album?.photos ?? []).map((photo) => {
+          const location = photo.locationId ? LOCATION_BY_ID[photo.locationId] : null;
+
+          return {
+            ...photo,
+            src: `/photos/${album?.folder ?? country}/${photo.file}`,
+            caption: photo.caption ?? captionFromFile(photo.file),
+            locationName: photo.locationLabel ?? location?.name,
+          };
+        });
+
+        return {
+          country,
+          locations,
+          photos,
+          photoCount: photos.length,
+          coverPhoto:
+            photos.find((photo) => photo.cover)?.src ??
+            photos[0]?.src,
+        };
+      })
       .sort((a, b) => a.country.localeCompare(b.country));
   }, []);
 
   const galleryCountry =
     countries.find((country) => country.country === selectedCountry) ?? countries[0];
+  const galleryPhotos =
+    selectedGalleryLocationId && galleryCountry
+      ? galleryCountry.photos.filter((photo) => photo.locationId === selectedGalleryLocationId)
+      : galleryCountry?.photos ?? [];
+  const expandedPhoto =
+    expandedPhotoIndex !== null ? galleryPhotos[expandedPhotoIndex] : null;
+
+  useEffect(() => {
+    setExpandedPhotoIndex(null);
+  }, [selectedCountry, selectedGalleryLocationId]);
+
+  useEffect(() => {
+    if (!expandedPhoto) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setExpandedPhotoIndex(null);
+      }
+
+      if (event.key === 'ArrowLeft') {
+        setExpandedPhotoIndex((current) =>
+          current === null ? current : (current - 1 + galleryPhotos.length) % galleryPhotos.length
+        );
+      }
+
+      if (event.key === 'ArrowRight') {
+        setExpandedPhotoIndex((current) =>
+          current === null ? current : (current + 1) % galleryPhotos.length
+        );
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [expandedPhoto, galleryPhotos.length]);
 
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -171,7 +240,7 @@ export default function Home() {
                 mapboxAccessToken={token}
                 mapStyle="mapbox://styles/mapbox/streets-v12"
                 projection="globe"
-                initialViewState={{ longitude: 18, latitude: 24, zoom: 1.35 }}
+                initialViewState={{ longitude: -77.0369, latitude: 38.9072, zoom: 1.55 }}
                 style={{ width: '100%', height: '100%' }}
                 interactiveLayerIds={['selected-routes-hit']}
                 cursor="grab"
@@ -323,6 +392,7 @@ export default function Home() {
                     type="button"
                     onClick={() => {
                       setSelectedCountry(selectedLocation.country);
+                      setSelectedGalleryLocationId(null);
                       setActiveView('gallery');
                     }}
                     className="w-full rounded-md bg-[#1F5E55] px-4 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-[#174B44]"
@@ -351,7 +421,10 @@ export default function Home() {
                 <button
                   key={country.country}
                   type="button"
-                  onClick={() => setSelectedCountry(country.country)}
+                  onClick={() => {
+                    setSelectedCountry(country.country);
+                    setSelectedGalleryLocationId(null);
+                  }}
                   className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition ${selectedCountry === country.country
                     ? 'bg-[#1F5E55] text-white'
                     : 'text-[#34413C] hover:bg-[#F0ECE4]'
@@ -409,68 +482,173 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              {galleryCountry?.locations.map((location) => (
-                <article
-                  key={location.id}
-                  className="overflow-hidden rounded-lg border border-[#CFC7BA] bg-[#FDFBF6] shadow-sm"
+            <div className="rounded-lg border border-[#CFC7BA] bg-[#FDFBF6] p-4 shadow-sm">
+              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#69746E]">
+                    Places
+                  </p>
+                  <h3 className="mt-1 text-xl font-semibold text-[#16221F]">
+                    {galleryCountry?.country} album
+                  </h3>
+                </div>
+                <span className="text-sm text-[#52605A]">
+                  {galleryCountry?.locations.length ?? 0} places
+                </span>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedGalleryLocationId(null)}
+                  className={`rounded-md border px-3 py-2 text-sm font-semibold shadow-sm transition ${selectedGalleryLocationId === null
+                    ? 'border-[#1F5E55] bg-[#1F5E55] text-white'
+                    : 'border-[#CFC7BA] bg-white text-[#34413C] hover:bg-[#F0ECE4]'
+                    }`}
                 >
-                  <div className="relative aspect-[16/10] bg-[#EFE8DC]">
-                    {location.coverPhoto ? (
-                      <Image
-                        src={location.coverPhoto}
-                        alt={location.coverCaption ?? location.name}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                      />
-                    ) : (
-                      <div className="grid h-full place-items-center px-6 text-center text-sm text-[#69746E]">
-                        Cover photo pending
-                      </div>
-                    )}
-                  </div>
+                  All photos
+                </button>
+                {galleryCountry?.locations.map((location) => (
+                  <button
+                    key={location.id}
+                    type="button"
+                    onClick={() => setSelectedGalleryLocationId(location.id)}
+                    className={`rounded-md border px-3 py-2 text-sm font-semibold shadow-sm transition ${selectedGalleryLocationId === location.id
+                      ? 'border-[#1F5E55] bg-[#1F5E55] text-white'
+                      : 'border-[#CFC7BA] bg-white text-[#34413C] hover:bg-[#F0ECE4]'
+                      }`}
+                  >
+                    {location.name}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-                  <div className="p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <h3 className="text-xl font-semibold text-[#16221F]">{location.name}</h3>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedLocationId(location.id);
-                          setActiveView('globe');
-                        }}
-                        className="rounded-md border border-[#CFC7BA] px-3 py-1.5 text-xs font-semibold text-[#34413C] hover:bg-[#F0ECE4]"
-                      >
-                        Map
-                      </button>
-                    </div>
+            <div className="rounded-lg border border-[#CFC7BA] bg-[#FDFBF6] p-4 shadow-sm">
+              <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#69746E]">
+                    Photos
+                  </p>
+                  <h3 className="mt-1 text-xl font-semibold text-[#16221F]">
+                    Country album photos
+                  </h3>
+                </div>
+                <span className="text-sm text-[#52605A]">
+                  {galleryPhotos.length} photos
+                </span>
+              </div>
 
-                    {location.photos.length > 0 ? (
-                      <div className="mt-4 grid grid-cols-3 gap-2">
-                        {location.photos.map((photo) => (
-                          <div key={photo.src} className="relative aspect-square overflow-hidden rounded-md">
-                            <Image
-                              src={photo.src}
-                              alt={photo.caption}
-                              fill
-                              className="object-cover"
-                              sizes="140px"
-                            />
-                          </div>
-                        ))}
+              {galleryPhotos.length > 0 ? (
+                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {galleryPhotos.map((photo) => (
+                    <button
+                      key={`${photo.locationId ?? 'country'}-${photo.src}`}
+                      type="button"
+                      onClick={() => setExpandedPhotoIndex(galleryPhotos.indexOf(photo))}
+                      className="group overflow-hidden rounded-lg border border-[#DDD5CA] bg-white text-left transition hover:-translate-y-0.5 hover:shadow-md"
+                    >
+                      <div className="relative aspect-[4/3] bg-[#EFE8DC]">
+                        <Image
+                          src={photo.src}
+                          alt={photo.caption}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                        <div className="absolute inset-0 bg-[#101816]/0 transition group-hover:bg-[#101816]/20">
+                          <span className="absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-md border border-white/70 bg-white/90 text-2xl font-semibold leading-none text-[#16221F] opacity-0 shadow-sm transition group-hover:opacity-100">
+                            ↗
+                          </span>
+                        </div>
                       </div>
-                    ) : (
-                      <div className="mt-4 rounded-md border border-dashed border-[#CFC7BA] px-3 py-4 text-sm text-[#69746E]">
-                        Photos can be added manually under this location without changing the data model.
+                      <div className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
+                        <span className="font-semibold text-[#16221F]">{photo.caption}</span>
+                        {photo.locationName && (
+                          <span className="text-xs text-[#69746E]">{photo.locationName}</span>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </article>
-              ))}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="mt-4 rounded-md border border-dashed border-[#CFC7BA] px-3 py-6 text-sm text-[#69746E]">
+                  Add photos to this country album and they will appear here.
+                </div>
+              )}
             </div>
           </div>
         </section>
+      )}
+
+      {expandedPhoto && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-[#101816]/90 px-4 py-6"
+          role="dialog"
+          aria-modal="true"
+          aria-label={expandedPhoto.caption}
+          onClick={() => setExpandedPhotoIndex(null)}
+        >
+          <div
+            className="relative flex h-full w-full max-w-6xl flex-col"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mb-3 flex items-center justify-between gap-3 text-white">
+              <div>
+                <h2 className="text-lg font-semibold">{expandedPhoto.caption}</h2>
+                {expandedPhoto.locationName && (
+                  <p className="text-sm text-white/70">{expandedPhoto.locationName}</p>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => setExpandedPhotoIndex(null)}
+                className="rounded-md border border-white/30 px-3 py-2 text-sm font-semibold text-white hover:bg-white/10"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="relative min-h-0 flex-1 overflow-hidden rounded-lg bg-black">
+              <Image
+                src={expandedPhoto.src}
+                alt={expandedPhoto.caption}
+                fill
+                className="object-contain"
+                sizes="100vw"
+              />
+
+              {galleryPhotos.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedPhotoIndex((current) =>
+                        current === null
+                          ? current
+                          : (current - 1 + galleryPhotos.length) % galleryPhotos.length
+                      )
+                    }
+                    className="absolute left-3 top-1/2 -translate-y-1/2 rounded-md bg-white/90 px-3 py-2 text-sm font-semibold text-[#16221F] shadow-sm hover:bg-white"
+                  >
+                    Prev
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedPhotoIndex((current) =>
+                        current === null ? current : (current + 1) % galleryPhotos.length
+                      )
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md bg-white/90 px-3 py-2 text-sm font-semibold text-[#16221F] shadow-sm hover:bg-white"
+                  >
+                    Next
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );

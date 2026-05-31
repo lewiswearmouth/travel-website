@@ -504,6 +504,7 @@ export const LOCATIONS: Location[] = [
     region: "South America",
     coords: [-58.3816, -34.6037],
     photos: [],
+    coverPhoto: "/photos/argentina/IMG_1652.jpg"
   },
   {
     id: "santiago",
@@ -512,6 +513,7 @@ export const LOCATIONS: Location[] = [
     region: "South America",
     coords: [-70.6693, -33.4489],
     photos: [],
+    coverPhoto: "/photos/chile/IMG_1628.jpg"
   },
   {
     id: "valparaiso",
@@ -520,6 +522,7 @@ export const LOCATIONS: Location[] = [
     region: "South America",
     coords: [-71.6127, -33.0472],
     photos: [],
+    coverPhoto: "/photos/chile/IMG_1605.HEIC"
   },
   {
     id: "olmue",
@@ -528,6 +531,7 @@ export const LOCATIONS: Location[] = [
     region: "South America",
     coords: [-71.1867, -32.9958],
     photos: [],
+    coverPhoto: "/photos/chile/IMG_1723.JPG"
   },
   {
     id: "montevideo",
@@ -536,6 +540,7 @@ export const LOCATIONS: Location[] = [
     region: "South America",
     coords: [-56.1645, -34.9011],
     photos: [],
+    coverPhoto: "/photos/uruguay/IMG_1694(1).JPG"
   },
   {
     id: "colonia-del-sacramento",
@@ -544,6 +549,7 @@ export const LOCATIONS: Location[] = [
     region: "South America",
     coords: [-57.8439, -34.4714],
     photos: [],
+    coverPhoto: "/photos/uruguay/IMG_1675.JPG"
   },
   {
     id: "lima",
@@ -552,6 +558,16 @@ export const LOCATIONS: Location[] = [
     region: "South America",
     coords: [-77.0428, -12.0464],
     photos: [],
+    coverPhoto: "/photos/peru/IMG_3752.jpg"
+  },
+  {
+    id: "huacachina",
+    name: "Huacachina",
+    country: "Peru",
+    region: "South America",
+    coords: [-75.7639, -14.0875],
+    photos: [],
+    coverPhoto: "/photos/peru/IMG_3717.jpg",
   },
   {
     id: "cusco",
@@ -560,6 +576,7 @@ export const LOCATIONS: Location[] = [
     region: "South America",
     coords: [-71.9675, -13.5319],
     photos: [],
+    coverPhoto: "/photos/peru/IMG_3390.jpg",
   },
   {
     id: "arequipa",
@@ -568,6 +585,7 @@ export const LOCATIONS: Location[] = [
     region: "South America",
     coords: [-71.5375, -16.409],
     photos: [],
+    coverPhoto: "/photos/peru/IMG_3673.jpg"
   },
   {
     id: "bangkok",
@@ -638,6 +656,7 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "louisville-lima", origin: "louisville", destination: "lima", mode: "plane", month: "May 2025" },
   { id: "lima-cusco", origin: "lima", destination: "cusco", mode: "plane", month: "May 2025" },
   { id: "cusco-arequipa", origin: "cusco", destination: "arequipa", mode: "plane", month: "May 2025" },
+  { id: "lima-huacachina", origin: "lima", destination: "huacachina", mode: "road", month: "May 2025" },
   { id: "arequipa-lima", origin: "arequipa", destination: "lima", mode: "plane", month: "May 2025" },
   { id: "dc-madrid", origin: "washington-dc", destination: "madrid", mode: "plane", month: "Study abroad" },
   { id: "madrid-budapest", origin: "madrid", destination: "budapest", mode: "plane", month: "Study abroad" },
