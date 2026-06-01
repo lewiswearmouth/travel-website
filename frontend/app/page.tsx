@@ -392,7 +392,7 @@ export default function Home() {
                     type="button"
                     onClick={() => {
                       setSelectedCountry(selectedLocation.country);
-                      setSelectedGalleryLocationId(null);
+                      setSelectedGalleryLocationId(selectedLocation.id);
                       setActiveView('gallery');
                     }}
                     className="w-full rounded-md bg-[#1F5E55] px-4 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-[#174B44]"
@@ -475,7 +475,7 @@ export default function Home() {
                       <strong className="block text-lg text-[#1C2A26]">
                         {galleryCountry?.photoCount ?? 0}
                       </strong>
-                      curated photos
+                      photos
                     </div>
                   </div>
                 </div>

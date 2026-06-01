@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import convert from "heic-convert";
 import sharp from "sharp";
 
 const photosRoot = path.resolve("public", "photos");
@@ -32,9 +33,23 @@ async function convertFile(filePath) {
 
   try {
     await fs.access(outputPath);
-    return { filePath, outputPath, status: "skipped" };
+    await fs.unlink(filePath);
+    return { filePath, outputPath, status: "deleted-existing" };
   } catch {
-    await sharp(filePath).rotate().jpeg({ quality: 88 }).toFile(outputPath);
+    try {
+      await sharp(filePath).rotate().jpeg({ quality: 88 }).toFile(outputPath);
+    } catch {
+      const inputBuffer = await fs.readFile(filePath);
+      const outputBuffer = await convert({
+        buffer: inputBuffer,
+        format: "JPEG",
+        quality: 0.88,
+      });
+
+      await fs.writeFile(outputPath, Buffer.from(outputBuffer));
+    }
+
+    await fs.unlink(filePath);
     return { filePath, outputPath, status: "converted" };
   }
 }
@@ -70,14 +85,14 @@ for (const filePath of heicFiles) {
 
 const replacements = await updatePhotoReferences(heicFiles);
 const converted = results.filter((result) => result.status === "converted").length;
-const skipped = results.filter((result) => result.status === "skipped").length;
+const deletedExisting = results.filter((result) => result.status === "deleted-existing").length;
 
 console.log(
   JSON.stringify(
     {
       heicFiles: heicFiles.length,
       converted,
-      skipped,
+      deletedExisting,
       photoReferenceUpdates: replacements,
     },
     null,

@@ -56,6 +56,24 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-87.6298, 41.8781],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_5651.jpg"
+  },
+  {
+    id: "ann-arbor",
+    name: "Ann Arbor",
+    country: "United States",
+    region: "North America",
+    coords: [-83.743, 42.2808],
+    photos: [],
+    coverPhoto: "/photos/united-states/72083291276__5CCED1D6-43AD-4D60-8102-4772A4EB8CAC.jpg"
+  },
+  {
+    id: "indiana-dunes",
+    name: "Indiana Dunes",
+    country: "United States",
+    region: "North America",
+    coords: [-87.0965, 41.6533],
+    photos: [],
   },
   {
     id: "west-lafayette",
@@ -66,20 +84,13 @@ export const LOCATIONS: Location[] = [
     photos: [],
   },
   {
-    id: "indianapolis",
-    name: "Indianapolis",
-    country: "United States",
-    region: "North America",
-    coords: [-86.1581, 39.7684],
-    photos: [],
-  },
-  {
     id: "seattle",
     name: "Seattle",
     country: "United States",
     region: "North America",
     coords: [-122.3321, 47.6062],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_3039.jpg"
   },
   {
     id: "philadelphia",
@@ -96,6 +107,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-86.7816, 36.1627],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_8437.jpg"
   },
   {
     id: "san-juan",
@@ -104,22 +116,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-66.1057, 18.4655],
     photos: [],
-  },
-  {
-    id: "tampa",
-    name: "Tampa",
-    country: "United States",
-    region: "North America",
-    coords: [-82.4572, 27.9506],
-    photos: [],
-  },
-  {
-    id: "st. petersburg",
-    name: "St. Petersburg",
-    country: "United States",
-    region: "North America",
-    coords: [-82.6403, 27.7676],
-    photos: [],
+    coverPhoto: "/photos/united-states/IMG_0921.jpg"
   },
   {
     id: "boston",
@@ -135,14 +132,6 @@ export const LOCATIONS: Location[] = [
     country: "United States",
     region: "North America",
     coords: [-68.7998, 44.3879],
-    photos: [],
-  },
-  {
-    id: "gainesville",
-    name: "Gainesville",
-    country: "United States",
-    region: "North America",
-    coords: [-82.3248, 29.6516],
     photos: [],
   },
   {
@@ -708,9 +697,14 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "hanoi-dc", origin: "hanoi", destination: "washington-dc", mode: "plane", month: "Summer 2024" },
   { id: "dc-chicago", origin: "washington-dc", destination: "chicago", mode: "plane" },
   { id: "dc-west-lafayette", origin: "washington-dc", destination: "west-lafayette", mode: "plane" },
+  { id: "west-lafayette-chicago", origin: "west-lafayette", destination: "chicago", mode: "road" },
+  { id: "chicago-louisville", origin: "chicago", destination: "louisville", mode: "road" },
+  { id: "chicago-ann-arbor", origin: "chicago", destination: "ann-arbor", mode: "train" },
+  { id: "west-lafayette-ann-arbor", origin: "west-lafayette", destination: "ann-arbor", mode: "road" },
+  { id: "west-lafayette-indiana-dunes", origin: "west-lafayette", destination: "indiana-dunes", mode: "road" },
+  { id: "indiana-dunes-chicago", origin: "indiana-dunes", destination: "chicago", mode: "road" },
+  { id: "indiana-dunes-ann-arbor", origin: "indiana-dunes", destination: "ann-arbor", mode: "road" },
   { id: "dc-boston", origin: "washington-dc", destination: "boston", mode: "road" },
-  { id: "dc-indianapolis", origin: "washington-dc", destination: "indianapolis", mode: "plane" },
-  { id: "indianapolis-west-lafayette", origin: "indianapolis", destination: "west-lafayette", mode: "road" },
   { id: "dc-castine", origin: "washington-dc", destination: "castine", mode: "road" },
   { id: "dc-corolla", origin: "washington-dc", destination: "corolla", mode: "road" },
   { id: "dc-hanover-nh", origin: "washington-dc", destination: "hanover-nh", mode: "road" },
@@ -722,15 +716,10 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "dc-louisville", origin: "washington-dc", destination: "louisville", mode: "plane" },
   { id: "west-lafayette-san-juan", origin: "west-lafayette", destination: "san-juan", mode: "plane" },
   { id: "louisville-seattle", origin: "louisville", destination: "seattle", mode: "plane" },
-  { id: "dc-tampa", origin: "washington-dc", destination: "tampa", mode: "plane" },
-  { id: "tampa-gainesville", origin: "tampa", destination: "gainesville", mode: "road" },
-  { id: "west-lafayette-tampa", origin: "west-lafayette", destination: "tampa", mode: "plane" },
-  { id: "louisville-tampa", origin: "louisville", destination: "tampa", mode: "plane" },
   { id: "madrid-munich", origin: "madrid", destination: "munich", mode: "plane" },
   { id: "munich-nuremberg", origin: "munich", destination: "nuremberg", mode: "train" },
   { id: "dingle-galway", origin: "dingle", destination: "galway", mode: "road" },
   { id: "galway-dublin", origin: "galway", destination: "dublin", mode: "road" },
-  { id: "tampa-st. petersburg", origin: "tampa", destination: "st. petersburg", mode: "road" },
 ];
 
 export const LOCATION_BY_ID = Object.fromEntries(LOCATIONS.map((location) => [location.id, location]));
