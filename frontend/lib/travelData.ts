@@ -74,6 +74,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-87.0965, 41.6533],
     photos: [],
+    coverPhoto: "/photos/united-states/dji_fly_20231103_133450_994_1699036570414_timed.jpg"
   },
   {
     id: "west-lafayette",
@@ -583,6 +584,7 @@ export const LOCATIONS: Location[] = [
     region: "Southeast Asia",
     coords: [100.5018, 13.7563],
     photos: [],
+    coverPhoto: "/photos/thailand/IMG_0014.jpg"
   },
   {
     id: "siem-reap",
@@ -591,6 +593,7 @@ export const LOCATIONS: Location[] = [
     region: "Southeast Asia",
     coords: [103.8564, 13.3633],
     photos: [],
+    coverPhoto: "/photos/cambodia/IMG_0580.jpg"
   },
   {
     id: "phnom-penh",
@@ -599,6 +602,7 @@ export const LOCATIONS: Location[] = [
     region: "Southeast Asia",
     coords: [104.9282, 11.5564],
     photos: [],
+    coverPhoto: "/photos/cambodia/IMG_0783.jpg"
   },
   {
     id: "ho-chi-minh-city",
@@ -607,6 +611,7 @@ export const LOCATIONS: Location[] = [
     region: "Southeast Asia",
     coords: [106.6297, 10.8231],
     photos: [],
+    coverPhoto: "/photos/vietnam/IMG_0866.jpg"
   },
   {
     id: "ninh-binh",
@@ -615,6 +620,7 @@ export const LOCATIONS: Location[] = [
     region: "Southeast Asia",
     coords: [105.9745, 20.2506],
     photos: [],
+    coverPhoto: "/photos/vietnam/IMG_9016.jpg"
   },
   {
     id: "hoi-an",
@@ -623,6 +629,7 @@ export const LOCATIONS: Location[] = [
     region: "Southeast Asia",
     coords: [108.338, 15.8801],
     photos: [],
+    coverPhoto: "/photos/vietnam/IMG_8992.jpg"
   },
   {
     id: "hanoi",
@@ -631,6 +638,16 @@ export const LOCATIONS: Location[] = [
     region: "Southeast Asia",
     coords: [105.8342, 21.0278],
     photos: [],
+    coverPhoto: "/photos/vietnam/IMG_1122.jpg"
+  },
+  {
+    id: "ha-long-bay",
+    name: "Ha Long Bay",
+    country: "Vietnam",
+    region: "Southeast Asia",
+    coords: [107.0448, 20.9101],
+    photos: [],
+    coverPhoto: "/photos/vietnam/IMG_9165.jpg"
   },
 ];
 
@@ -694,7 +711,8 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "ho-chi-minh-city-hoi-an", origin: "ho-chi-minh-city", destination: "hoi-an", mode: "plane", month: "Summer 2024" },
   { id: "hoi-an-ninh-binh", origin: "hoi-an", destination: "ninh-binh", mode: "road", month: "Summer 2024" },
   { id: "ninh-binh-hanoi", origin: "ninh-binh", destination: "hanoi", mode: "road", month: "Summer 2024" },
-  { id: "hanoi-dc", origin: "hanoi", destination: "washington-dc", mode: "plane", month: "Summer 2024" },
+  { id: "hanoi-ha-long-bay", origin: "hanoi", destination: "ha-long-bay", mode: "road", month: "Summer 2024" },
+  { id: "hanoi-bangkok", origin: "hanoi", destination: "bangkok", mode: "plane", month: "Summer 2024" },
   { id: "dc-chicago", origin: "washington-dc", destination: "chicago", mode: "plane" },
   { id: "dc-west-lafayette", origin: "washington-dc", destination: "west-lafayette", mode: "plane" },
   { id: "west-lafayette-chicago", origin: "west-lafayette", destination: "chicago", mode: "road" },
