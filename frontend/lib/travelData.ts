@@ -48,6 +48,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-85.7585, 38.2527],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_3201.jpg"
   },
   {
     id: "chicago",
@@ -374,6 +375,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [19.8187, 41.3275],
     photos: [],
+    coverPhoto: "/photos/albania/IMG_3469.jpg"
   },
   {
     id: "berat",
@@ -382,6 +384,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [19.9522, 40.7058],
     photos: [],
+    coverPhoto: "/photos/albania/IMG_6754.jpg"
   },
   {
     id: "dublin",
@@ -717,6 +720,7 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "dc-west-lafayette", origin: "washington-dc", destination: "west-lafayette", mode: "plane" },
   { id: "west-lafayette-chicago", origin: "west-lafayette", destination: "chicago", mode: "road" },
   { id: "chicago-louisville", origin: "chicago", destination: "louisville", mode: "road" },
+  { id: "louisville-west-lafayette", origin: "louisville", destination: "west-lafayette", mode: "road" },
   { id: "chicago-ann-arbor", origin: "chicago", destination: "ann-arbor", mode: "train" },
   { id: "west-lafayette-ann-arbor", origin: "west-lafayette", destination: "ann-arbor", mode: "road" },
   { id: "west-lafayette-indiana-dunes", origin: "west-lafayette", destination: "indiana-dunes", mode: "road" },
