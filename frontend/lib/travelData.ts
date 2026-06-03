@@ -40,6 +40,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-77.0369, 38.9072],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_0575.jpg"
   },
   {
     id: "louisville",
@@ -101,6 +102,16 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-122.4194, 37.7749],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_0330.jpg"
+  },
+  {
+    id: "yosemite",
+    name: "Yosemite",
+    country: "United States",
+    region: "North America",
+    coords: [-119.5383, 37.8651],
+    photos: [],
+    coverPhoto: "/photos/united-states/IMG_1051.jpg"
   },
   {
     id: "maui",
@@ -109,6 +120,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-156.3319, 20.7984],
     photos: [],
+    coverPhoto: "/photos/united-states/RemoteMediaFile_6553650_0_2021_06_27_13_20_40.jpg"
   },
   {
     id: "oahu",
@@ -152,6 +164,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-71.0589, 42.3601],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_5601.jpg"
   },
   {
     id: "castine",
@@ -160,6 +173,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-68.7998, 44.3879],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_5333.jpg"
   },
   {
     id: "corolla",
@@ -176,6 +190,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-72.2896, 43.7022],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_5102.jpg"
   },
   {
     id: "deep-creek",
@@ -192,6 +207,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-71.1284, 44.0537],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_1914.jpg"
   },
   {
     id: "white-mountains",
@@ -805,6 +821,7 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "dc-blacksburg", origin: "washington-dc", destination: "blacksburg", mode: "road" },
   { id: "dc-seattle", origin: "washington-dc", destination: "seattle", mode: "plane" },
   { id: "dc-san-francisco", origin: "washington-dc", destination: "san-francisco", mode: "plane" },
+  { id: "san-francisco-yosemite", origin: "san-francisco", destination: "yosemite", mode: "road" },
   { id: "dc-maui", origin: "washington-dc", destination: "maui", mode: "plane" },
   { id: "maui-oahu", origin: "maui", destination: "oahu", mode: "plane" },
   { id: "dc-philadelphia", origin: "washington-dc", destination: "philadelphia", mode: "plane" },
