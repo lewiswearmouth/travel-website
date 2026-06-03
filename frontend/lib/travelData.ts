@@ -85,6 +85,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-86.9081, 40.4259],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_1261.jpg"
   },
   {
     id: "seattle",
@@ -182,6 +183,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-75.8308, 36.3807],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_5440.png"
   },
   {
     id: "hanover-nh",
@@ -199,6 +201,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-79.3817, 39.4926],
     photos: [],
+    coverPhoto: "/photos/united-states/dji_fly_20240731_200814_102_1722470922598_photo_optimized.jpg"
   },
   {
     id: "north-conway",
@@ -251,6 +254,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [2.1734, 41.3851],
     photos: [],
+    coverPhoto: "/photos/spain/IMG_5603.jpg"
   },
   {
     id: "bilbao",
@@ -291,6 +295,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [5.3698, 43.2965],
     photos: [],
+    coverPhoto: "/photos/france/dji_fly_20230707_141654_622_1688735290892_photo_optimized.jpg"
   },
   {
     id: "antibes",
@@ -299,6 +304,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [7.1251, 43.5804],
     photos: [],
+    coverPhoto: "/photos/france/IMG_0688.jpg"
   },
   {
     id: "bolzano",
@@ -307,6 +313,16 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [11.3548, 46.4983],
     photos: [],
+    coverPhoto: "/photos/italy/IMG_5949.jpg"
+  },
+  {
+    id: "dolomites",
+    name: "Dolomites",
+    country: "Italy",
+    region: "Europe",
+    coords: [11.85, 46.4102],
+    photos: [],
+    coverPhoto: "/photos/italy/IMG_0992.jpg"
   },
   {
     id: "venice",
@@ -315,6 +331,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [12.3155, 45.4408],
     photos: [],
+    coverPhoto: "/photos/italy/IMG_6150.jpg"
   },
   {
     id: "ljubljana",
@@ -323,6 +340,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [14.5058, 46.0569],
     photos: [],
+    coverPhoto: "/photos/slovenia/dji_fly_20230719_151946_825_1689773464655_photo_optimized.jpg"
   },
   {
     id: "lake-bled",
@@ -331,6 +349,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [14.0946, 46.3632],
     photos: [],
+    coverPhoto: "/photos/slovenia/dji_fly_20230717_120054_790_1689588812989_photo_optimized.jpg"
   },
   {
     id: "zagreb",
@@ -339,6 +358,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [15.9819, 45.815],
     photos: [],
+    coverPhoto: "/photos/croatia/dji_fly_20230720_184358_846_1689871650053_photo_optimized.jpg"
   },
   {
     id: "london",
@@ -377,14 +397,6 @@ export const LOCATIONS: Location[] = [
     coverPhoto: "/photos/united-kingdom/RemoteMediaFile_6554146_0_2022_07_10_21_51_56.jpg"
   },
   {
-    id: "st-andrews",
-    name: "St. Andrews",
-    country: "United Kingdom",
-    region: "Europe",
-    coords: [-2.7967, 56.3398],
-    photos: [],
-  },
-  {
     id: "paris",
     name: "Paris",
     country: "France",
@@ -400,6 +412,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [7.4246, 43.7384],
     photos: [],
+    coverPhoto: "/photos/monaco/IMG_0911.jpg"
   },
   {
     id: "versailles",
@@ -778,6 +791,7 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "marseille-antibes", origin: "marseille", destination: "antibes", mode: "train", month: "Summer 2023" },
   { id: "antibes-monaco", origin: "antibes", destination: "monaco", mode: "train", month: "Summer 2023" },
   { id: "antibes-bolzano", origin: "antibes", destination: "bolzano", mode: "train", month: "Summer 2023" },
+  { id: "bolzano-dolomites", origin: "bolzano", destination: "dolomites", mode: "road", month: "Summer 2023" },
   { id: "bolzano-venice", origin: "bolzano", destination: "venice", mode: "train", month: "Summer 2023" },
   { id: "venice-ljubljana", origin: "venice", destination: "ljubljana", mode: "train", month: "Summer 2023" },
   { id: "ljubljana-lake-bled", origin: "ljubljana", destination: "lake-bled", mode: "train", month: "Summer 2023" },
@@ -785,7 +799,6 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "zagreb-dc", origin: "zagreb", destination: "washington-dc", mode: "plane", month: "Summer 2023" },
   { id: "dc-london", origin: "washington-dc", destination: "london", mode: "plane" },
   { id: "london-edinburgh", origin: "london", destination: "edinburgh", mode: "train" },
-  { id: "edinburgh-st-andrews", origin: "edinburgh", destination: "st-andrews", mode: "road" },
   { id: "london-cambridge", origin: "london", destination: "cambridge", mode: "road" },
   { id: "cambridge-manchester", origin: "cambridge", destination: "manchester", mode: "road" },
   { id: "manchester-london", origin: "manchester", destination: "london", mode: "road" },
