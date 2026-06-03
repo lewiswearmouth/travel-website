@@ -95,12 +95,37 @@ export const LOCATIONS: Location[] = [
     coverPhoto: "/photos/united-states/IMG_3039.jpg"
   },
   {
+    id: "san-francisco",
+    name: "San Francisco",
+    country: "United States",
+    region: "North America",
+    coords: [-122.4194, 37.7749],
+    photos: [],
+  },
+  {
+    id: "maui",
+    name: "Maui",
+    country: "United States",
+    region: "North America",
+    coords: [-156.3319, 20.7984],
+    photos: [],
+  },
+  {
+    id: "oahu",
+    name: "Oahu",
+    country: "United States",
+    region: "North America",
+    coords: [-157.8583, 21.3099],
+    photos: [],
+  },
+  {
     id: "philadelphia",
     name: "Philadelphia",
     country: "United States",
     region: "North America",
     coords: [-75.1652, 39.9526],
     photos: [],
+    coverPhoto: "/photos/united-states/RemoteMediaFile_6553934_0_2021_11_27_06_51_00.jpg"
   },
   {
     id: "nashville",
@@ -167,6 +192,33 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-71.1284, 44.0537],
     photos: [],
+  },
+  {
+    id: "white-mountains",
+    name: "White Mountains",
+    country: "United States",
+    region: "North America",
+    coords: [-71.3176, 44.2584],
+    photos: [],
+    coverPhoto: "/photos/united-states/IMG_3116.jpg"
+  },
+  {
+    id: "new-paltz",
+    name: "New Paltz",
+    country: "United States",
+    region: "North America",
+    coords: [-74.0868, 41.7476],
+    photos: [],
+    coverPhoto: "/photos/united-states/dji_fly_20230404_133726_603_1680630112172_photo_optimized.jpg"
+  },
+  {
+    id: "blacksburg",
+    name: "Blacksburg",
+    country: "United States",
+    region: "North America",
+    coords: [-80.4139, 37.2296],
+    photos: [],
+    coverPhoto: "/photos/united-states/RemoteMediaFile_6553986_0_2022_01_31_07_04_00.jpg"
   },
   {
     id: "madrid",
@@ -279,6 +331,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-0.1276, 51.5072],
     photos: [],
+    coverPhoto: "/photos/united-kingdom/RemoteMediaFile_6554027_0_2022_04_13_10_45_08.jpg"
   },
   {
     id: "cambridge",
@@ -287,6 +340,16 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [0.1218, 52.2053],
     photos: [],
+    coverPhoto: "/photos/united-kingdom/RemoteMediaFile_6554060_0_2022_04_15_14_10_02.jpg"
+  },
+  {
+    id: "manchester",
+    name: "Manchester",
+    country: "United Kingdom",
+    region: "Europe",
+    coords: [-2.2426, 53.4808],
+    photos: [],
+    coverPhoto: "/photos/united-kingdom/IMG_1720.jpg"
   },
   {
     id: "edinburgh",
@@ -295,6 +358,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-3.1883, 55.9533],
     photos: [],
+    coverPhoto: "/photos/united-kingdom/RemoteMediaFile_6554146_0_2022_07_10_21_51_56.jpg"
   },
   {
     id: "st-andrews",
@@ -311,6 +375,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [2.3522, 48.8566],
     photos: [],
+    coverPhoto: "/photos/france/RemoteMediaFile_6554096_0_2022_07_03_21_52_04.jpg"
   },
   {
     id: "monaco",
@@ -327,6 +392,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [2.1301, 48.8014],
     photos: [],
+    coverPhoto: "/photos/france/IMG_4160.jpg"
   },
   {
     id: "budapest",
@@ -705,6 +771,8 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "london-edinburgh", origin: "london", destination: "edinburgh", mode: "train" },
   { id: "edinburgh-st-andrews", origin: "edinburgh", destination: "st-andrews", mode: "road" },
   { id: "london-cambridge", origin: "london", destination: "cambridge", mode: "road" },
+  { id: "cambridge-manchester", origin: "cambridge", destination: "manchester", mode: "road" },
+  { id: "manchester-london", origin: "manchester", destination: "london", mode: "road" },
   { id: "dc-paris", origin: "washington-dc", destination: "paris", mode: "plane" },
   { id: "paris-versailles", origin: "paris", destination: "versailles", mode: "train" },
   { id: "dc-bangkok", origin: "washington-dc", destination: "bangkok", mode: "plane", month: "Summer 2024" },
@@ -732,7 +800,13 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "dc-hanover-nh", origin: "washington-dc", destination: "hanover-nh", mode: "road" },
   { id: "dc-deep-creek", origin: "washington-dc", destination: "deep-creek", mode: "road" },
   { id: "dc-north-conway", origin: "washington-dc", destination: "north-conway", mode: "road" },
+  { id: "dc-white-mountains", origin: "washington-dc", destination: "white-mountains", mode: "road" },
+  { id: "dc-new-paltz", origin: "washington-dc", destination: "new-paltz", mode: "road" },
+  { id: "dc-blacksburg", origin: "washington-dc", destination: "blacksburg", mode: "road" },
   { id: "dc-seattle", origin: "washington-dc", destination: "seattle", mode: "plane" },
+  { id: "dc-san-francisco", origin: "washington-dc", destination: "san-francisco", mode: "plane" },
+  { id: "dc-maui", origin: "washington-dc", destination: "maui", mode: "plane" },
+  { id: "maui-oahu", origin: "maui", destination: "oahu", mode: "plane" },
   { id: "dc-philadelphia", origin: "washington-dc", destination: "philadelphia", mode: "plane" },
   { id: "west-lafayette-nashville", origin: "west-lafayette", destination: "nashville", mode: "plane" },
   { id: "dc-louisville", origin: "washington-dc", destination: "louisville", mode: "plane" },
