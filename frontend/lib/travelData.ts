@@ -130,6 +130,7 @@ export const LOCATIONS: Location[] = [
     region: "North America",
     coords: [-157.8583, 21.3099],
     photos: [],
+    coverPhoto: "/photos/united-states/IMG_1714.jpg"
   },
   {
     id: "philadelphia",
@@ -246,6 +247,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-3.7038, 40.4168],
     photos: [],
+    coverPhoto: "/photos/spain/IMG_6340.JPEG"
   },
   {
     id: "barcelona",
@@ -263,6 +265,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-2.935, 43.263],
     photos: [],
+    coverPhoto: "/photos/spain/IMG_6906.jpeg"
   },
   {
     id: "salamanca",
@@ -271,6 +274,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-5.6635, 40.9701],
     photos: [],
+    coverPhoto: "/photos/spain/IMG_6208.jpg"
   },
   {
     id: "segovia",
@@ -279,6 +283,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-4.1088, 40.9429],
     photos: [],
+    coverPhoto: "/photos/spain/IMG_6113.jpg"
   },
   {
     id: "toledo",
@@ -287,6 +292,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-4.0273, 39.8628],
     photos: [],
+    coverPhoto: "/photos/spain/IMG_6245.jpg"
   },
   {
     id: "marseille",
@@ -430,6 +436,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [19.0402, 47.4979],
     photos: [],
+    coverPhoto: "/photos/hungary/IMG_6368.jpg"
   },
   {
     id: "zurich",
@@ -438,6 +445,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [8.5417, 47.3769],
     photos: [],
+    coverPhoto: "/photos/switzerland/IMG_6505.jpg"
   },
   {
     id: "st-anton",
@@ -446,6 +454,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [10.2647, 47.1296],
     photos: [],
+    coverPhoto: "/photos/austria/IMG_6525.jpg"
   },
   {
     id: "lisbon",
@@ -454,6 +463,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-9.1393, 38.7223],
     photos: [],
+    coverPhoto: "/photos/portugal/IMG_6598.jpg"
   },
   {
     id: "sintra",
@@ -462,6 +472,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-9.3817, 38.8029],
     photos: [],
+    coverPhoto: "/photos/portugal/IMG_2721.jpg"
   },
   {
     id: "tirana",
@@ -488,6 +499,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-6.2603, 53.3498],
     photos: [],
+    coverPhoto: "/photos/ireland/IMG_5092.jpg"
   },
   {
     id: "dingle",
@@ -496,6 +508,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-10.2717, 52.1409],
     photos: [],
+    coverPhoto: "/photos/ireland/IMG_5179.jpg"
   },
   {
     id: "split",
@@ -504,6 +517,25 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [16.4402, 43.5081],
     photos: [],
+    coverPhoto: "/photos/croatia/IMG_7049.jpeg"
+  },
+  {
+    id: "krka",
+    name: "Krka",
+    country: "Croatia",
+    region: "Europe",
+    coords: [15.9722, 43.8666],
+    photos: [],
+    coverPhoto: "/photos/croatia/IMG_7021.JPEG"
+  },
+  {
+    id: "plitvice",
+    name: "Plitvice",
+    country: "Croatia",
+    region: "Europe",
+    coords: [15.582, 44.8654],
+    photos: [],
+    coverPhoto: "/photos/croatia/IMG_7043.JPEG"
   },
   {
     id: "mostar",
@@ -512,6 +544,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [17.8078, 43.3438],
     photos: [],
+    coverPhoto: "/photos/bosnia-and-herzegovina/IMG_7068.JPEG"
   },
   {
     id: "dubrovnik",
@@ -520,6 +553,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [18.0944, 42.6507],
     photos: [],
+    coverPhoto: "/photos/croatia/IMG_7132.jpeg"
   },
   {
     id: "kotor",
@@ -528,6 +562,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [18.7712, 42.4247],
     photos: [],
+    coverPhoto: "/photos/montenegro/IMG_7204.jpeg"
   },
   {
     id: "marrakech",
@@ -536,6 +571,43 @@ export const LOCATIONS: Location[] = [
     region: "North Africa",
     coords: [-7.9811, 31.6295],
     photos: [],
+    coverPhoto: "/photos/morocco/IMG_7913.jpg"
+  },
+  {
+    id: "ait-ben-haddou",
+    name: "Ait Ben Haddou",
+    country: "Morocco",
+    region: "North Africa",
+    coords: [-7.1295, 31.047],
+    photos: [],
+    coverPhoto: "/photos/morocco/IMG_3216.jpg"
+  },
+  {
+    id: "tinghir",
+    name: "Tinghir",
+    country: "Morocco",
+    region: "North Africa",
+    coords: [-5.5328, 31.5147],
+    photos: [],
+    coverPhoto: "/photos/morocco/IMG_7359.jpeg"
+  },
+  {
+    id: "todra-gorge",
+    name: "Todra Gorge",
+    country: "Morocco",
+    region: "North Africa",
+    coords: [-5.5886, 31.5889],
+    photos: [],
+    coverPhoto: "/photos/morocco/IMG_7384.jpeg"
+  },
+  {
+    id: "merzouga",
+    name: "Merzouga",
+    country: "Morocco",
+    region: "North Africa",
+    coords: [-4.0139, 31.0998],
+    photos: [],
+    coverPhoto: "/photos/morocco/IMG_3385.jpg"
   },
   {
     id: "porto",
@@ -544,6 +616,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-8.6291, 41.1579],
     photos: [],
+    coverPhoto: "/photos/portugal/IMG_7590.jpeg"
   },
   {
     id: "aveiro",
@@ -552,6 +625,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-8.6538, 40.6405],
     photos: [],
+    coverPhoto: "/photos/portugal/nomade_237901-862.JPEG"
   },
   {
     id: "valencia",
@@ -560,6 +634,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [-0.3763, 39.4699],
     photos: [],
+    coverPhoto: "/photos/spain/IMG_7776.jpeg"
   },
   {
     id: "munich",
@@ -568,6 +643,7 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [11.582, 48.1351],
     photos: [],
+    coverPhoto: "/photos/germany/IMG_7816.jpeg"
   },
   {
     id: "nuremberg",
@@ -576,14 +652,16 @@ export const LOCATIONS: Location[] = [
     region: "Europe",
     coords: [11.0767, 49.4521],
     photos: [],
+    coverPhoto: "/photos/germany/IMG_4578.jpg"
   },
   {
-    id: "galway",
-    name: "Galway",
+    id: "cliffs-of-moher",
+    name: "Cliffs of Moher",
     country: "Ireland",
     region: "Europe",
-    coords: [-9.0568, 53.2707],
+    coords: [-9.4309, 52.9715],
     photos: [],
+    coverPhoto: "/photos/ireland/IMG_6876.jpeg"
   },
   {
     id: "buenos-aires",
@@ -774,11 +852,18 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "madrid-dublin", origin: "madrid", destination: "dublin", mode: "plane", month: "Study abroad" },
   { id: "dublin-dingle", origin: "dublin", destination: "dingle", mode: "road", month: "Study abroad" },
   { id: "madrid-split", origin: "madrid", destination: "split", mode: "plane", month: "Study abroad" },
+  { id: "split-krka", origin: "split", destination: "krka", mode: "road", month: "Study abroad" },
+  { id: "split-plitvice", origin: "split", destination: "plitvice", mode: "road", month: "Study abroad" },
   { id: "split-mostar", origin: "split", destination: "mostar", mode: "road", month: "Study abroad" },
   { id: "mostar-dubrovnik", origin: "mostar", destination: "dubrovnik", mode: "road", month: "Study abroad" },
   { id: "dubrovnik-kotor", origin: "dubrovnik", destination: "kotor", mode: "road", month: "Study abroad" },
   { id: "kotor-madrid", origin: "kotor", destination: "madrid", mode: "plane", month: "Study abroad" },
   { id: "madrid-marrakech", origin: "madrid", destination: "marrakech", mode: "plane", month: "Study abroad" },
+  { id: "marrakech-ait-ben-haddou", origin: "marrakech", destination: "ait-ben-haddou", mode: "road", month: "Study abroad" },
+  { id: "ait-ben-haddou-tinghir", origin: "ait-ben-haddou", destination: "tinghir", mode: "road", month: "Study abroad" },
+  { id: "tinghir-todra-gorge", origin: "tinghir", destination: "todra-gorge", mode: "road", month: "Study abroad" },
+  { id: "tinghir-merzouga", origin: "tinghir", destination: "merzouga", mode: "road", month: "Study abroad" },
+  { id: "merzouga-marrakech", origin: "merzouga", destination: "marrakech", mode: "road", month: "Study abroad" },
   { id: "madrid-porto", origin: "madrid", destination: "porto", mode: "plane", month: "Study abroad" },
   { id: "porto-aveiro", origin: "porto", destination: "aveiro", mode: "train", month: "Study abroad" },
   { id: "madrid-valencia", origin: "madrid", destination: "valencia", mode: "train", month: "Study abroad" },
@@ -844,8 +929,8 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "louisville-seattle", origin: "louisville", destination: "seattle", mode: "plane" },
   { id: "madrid-munich", origin: "madrid", destination: "munich", mode: "plane" },
   { id: "munich-nuremberg", origin: "munich", destination: "nuremberg", mode: "train" },
-  { id: "dingle-galway", origin: "dingle", destination: "galway", mode: "road" },
-  { id: "galway-dublin", origin: "galway", destination: "dublin", mode: "road" },
+  { id: "dingle-cliffs-of-moher", origin: "dingle", destination: "cliffs-of-moher", mode: "road" },
+  { id: "cliffs-of-moher-dublin", origin: "cliffs-of-moher", destination: "dublin", mode: "road" },
 ];
 
 export const LOCATION_BY_ID = Object.fromEntries(LOCATIONS.map((location) => [location.id, location]));

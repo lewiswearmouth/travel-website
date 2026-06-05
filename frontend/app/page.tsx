@@ -65,7 +65,7 @@ function captionFromFile(file: string) {
 export default function Home() {
   const [activeView, setActiveView] = useState<ActiveView>('globe');
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<string>('Spain');
+  const [selectedCountry, setSelectedCountry] = useState<string>('United States');
   const [selectedGalleryLocationId, setSelectedGalleryLocationId] = useState<string | null>(null);
   const [expandedPhotoIndex, setExpandedPhotoIndex] = useState<number | null>(null);
   const [hoveredRouteId, setHoveredRouteId] = useState<string | null>(null);
@@ -160,6 +160,17 @@ export default function Home() {
   }, [selectedCountry, selectedGalleryLocationId]);
 
   useEffect(() => {
+    if (activeView !== 'globe' || !mapRef || !selectedLocation) return;
+
+    mapRef.flyTo({
+      center: selectedLocation.coords,
+      zoom: Math.max(mapRef.getZoom(), 2.2),
+      duration: 900,
+      essential: true,
+    });
+  }, [activeView, mapRef, selectedLocation]);
+
+  useEffect(() => {
     if (!expandedPhoto) return;
 
     function handleKeyDown(event: KeyboardEvent) {
@@ -208,7 +219,13 @@ export default function Home() {
                 <button
                   key={view}
                   type="button"
-                  onClick={() => setActiveView(view)}
+                  onClick={() => {
+                    if (view === 'globe' && selectedGalleryLocationId) {
+                      setSelectedLocationId(selectedGalleryLocationId);
+                    }
+
+                    setActiveView(view);
+                  }}
                   className={`rounded-md px-4 py-2 text-sm font-semibold transition ${activeView === view
                     ? 'bg-[#1F5E55] text-white shadow-sm'
                     : 'text-[#4E5A55] hover:bg-[#F0ECE4]'
