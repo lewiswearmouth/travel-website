@@ -240,7 +240,7 @@ export const COUNTRY_PHOTO_ALBUMS: Record<string, CountryPhotoAlbum> = {
     folder: "germany",
     photos: [
       { file: "IMG_0206.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
-      { file: "IMG_0215.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
+      { file: "IMG_0215.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026", cover: true },
       { file: "IMG_0220.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
       { file: "IMG_0227.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
       { file: "IMG_0238.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
@@ -249,7 +249,7 @@ export const COUNTRY_PHOTO_ALBUMS: Record<string, CountryPhotoAlbum> = {
       { file: "IMG_0289.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
       { file: "IMG_0291.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
       { file: "IMG_0300.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
-      { file: "IMG_4394.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026", cover: true },
+      { file: "IMG_4394.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
       { file: "IMG_4395.JPG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
       { file: "IMG_4500.jpg", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
       { file: "IMG_7816.JPEG", locationId: "munich", locationLabel: "Munich", caption: "May 2026" },
@@ -595,6 +595,7 @@ export const COUNTRY_PHOTO_ALBUMS: Record<string, CountryPhotoAlbum> = {
       { file: "IMG_7759.JPEG", locationId: "madrid", locationLabel: "Madrid", caption: "Study Abroad 2026" },
       { file: "IMG_7919.JPEG", locationId: "madrid", locationLabel: "Madrid", caption: "Study Abroad 2026" },
       { file: "IMG_7947.JPEG", locationId: "madrid", locationLabel: "Madrid", caption: "Study Abroad 2026" },
+      { file: "IMG_5738.JPEG", locationId: "madrid", locationLabel: "Madrid", caption: "Study Abroad 2026" },
       { file: "IMG_7953.JPEG", locationId: "madrid", locationLabel: "Madrid", caption: "Study Abroad 2026" },
       { file: "IMG_7955.JPEG", locationId: "madrid", locationLabel: "Madrid", caption: "Study Abroad 2026" },
 

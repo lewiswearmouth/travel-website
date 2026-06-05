@@ -242,7 +242,7 @@ export default function Home() {
               <strong className="text-[#1C2A26]">{countries.length}</strong> countries
             </div>
             <div>
-              <strong className="text-[#1C2A26]">{LOCATIONS.length}</strong> locations
+              <strong className="text-[#1C2A26]">{LOCATIONS.length}</strong> places
             </div>
           </div>
         </div>
@@ -486,7 +486,7 @@ export default function Home() {
                       <strong className="block text-lg text-[#1C2A26]">
                         {galleryCountry?.locations.length ?? 0}
                       </strong>
-                      locations
+                      places
                     </div>
                     <div>
                       <strong className="block text-lg text-[#1C2A26]">
