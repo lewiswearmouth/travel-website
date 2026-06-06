@@ -25,6 +25,18 @@ export type RouteSegment = {
   month?: string;
 };
 
+export type CityRanking = {
+  name: string;
+  country: string;
+};
+
+export type CityRankingGroup = {
+  id: "major" | "small";
+  title: string;
+  subtitle: string;
+  cities: CityRanking[];
+};
+
 export const MODE_STYLES: Record<TransportMode, { label: string; color: string }> = {
   plane: { label: "Plane", color: "#6EA8FE" },
   train: { label: "Train", color: "#4DD4AC" },
@@ -934,3 +946,93 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
 ];
 
 export const LOCATION_BY_ID = Object.fromEntries(LOCATIONS.map((location) => [location.id, location]));
+
+export const CITY_RANKING_GROUPS: CityRankingGroup[] = [
+  {
+    id: "major",
+    title: "Major Cities",
+    subtitle: "Big-city rankings",
+    cities: [
+      { name: "Madrid", country: "Spain 🇪🇸" },
+      { name: "Buenos Aires", country: "Argentina 🇦🇷" },
+      { name: "Hanoi", country: "Vietnam 🇻🇳" },
+      { name: "Barcelona", country: "Spain 🇪🇸" },
+      { name: "Edinburgh", country: "Scotland 🏴" },
+      { name: "Paris", country: "France 🇫🇷" },
+      { name: "Bangkok", country: "Thailand 🇹🇭" },
+      { name: "Porto", country: "Portugal 🇵🇹" },
+      { name: "Lisbon", country: "Portugal 🇵🇹" },
+      { name: "Chicago", country: "USA 🇺🇸" },
+      { name: "Munich", country: "Germany 🇩🇪" },
+      { name: "Valencia", country: "Spain 🇪🇸" },
+      { name: "DC", country: "USA 🇺🇸" },
+      { name: "Marrakech", country: "Morocco 🇲🇦" },
+      { name: "Budapest", country: "Hungary 🇭🇺" },
+      { name: "London", country: "England 🏴" },
+      { name: "Boston", country: "USA 🇺🇸" },
+      { name: "Philadelphia", country: "USA 🇺🇸" },
+      { name: "Ljubljana", country: "Slovenia 🇸🇮" },
+      { name: "Dubrovnik", country: "Croatia 🇭🇷" },
+      { name: "Split", country: "Croatia 🇭🇷" },
+      { name: "Nashville", country: "USA 🇺🇸" },
+      { name: "Seattle", country: "USA 🇺🇸" },
+      { name: "Dublin", country: "Ireland 🇮🇪" },
+      { name: "Zurich", country: "Switzerland 🇨🇭" },
+      { name: "Manchester", country: "England 🏴" },
+      { name: "Tampa", country: "USA 🇺🇸" },
+      { name: "Santiago", country: "Chile 🇨🇱" },
+      { name: "Tirana", country: "Albania 🇦🇱" },
+      { name: "Monaco", country: "Monaco 🇲🇨" },
+      { name: "Lima", country: "Peru 🇵🇪" },
+      { name: "Arequipa", country: "Peru 🇵🇪" },
+      { name: "Montevideo", country: "Uruguay 🇺🇾" },
+      { name: "Louisville", country: "USA 🇺🇸" },
+      { name: "Phnom Penh", country: "Cambodia 🇰🇭" },
+      { name: "Venice", country: "Italy 🇮🇹" },
+      { name: "Marseille", country: "France 🇫🇷" },
+      { name: "Ho Chi Minh", country: "Vietnam 🇻🇳" },
+      { name: "San Juan", country: "USA 🇺🇸" },
+      { name: "Zagreb", country: "Croatia 🇭🇷" },
+      { name: "Indianapolis", country: "USA 🇺🇸" },
+    ],
+  },
+  {
+    id: "small",
+    title: "Small Cities + Towns",
+    subtitle: "Smaller-place rankings",
+    cities: [
+      { name: "Kotor", country: "Montenegro 🇲🇪" },
+      { name: "Bilbao", country: "Spain 🇪🇸" },
+      { name: "Bled", country: "Slovenia 🇸🇮" },
+      { name: "Cusco", country: "Peru 🇵🇪" },
+      { name: "Hoi An", country: "Vietnam 🇻🇳" },
+      { name: "Mostar", country: "Bosnia and Herzegovina 🇧🇦" },
+      { name: "Salamanca", country: "Spain 🇪🇸" },
+      { name: "Antibes", country: "France 🇫🇷" },
+      { name: "Segovia", country: "Spain 🇪🇸" },
+      { name: "Nuremberg", country: "Germany 🇩🇪" },
+      { name: "Dingle", country: "Ireland 🇮🇪" },
+      { name: "Ninh Binh", country: "Vietnam 🇻🇳" },
+      { name: "Sintra", country: "Portugal 🇵🇹" },
+      { name: "Berat", country: "Albania 🇦🇱" },
+      { name: "Bolzano", country: "Italy 🇮🇹" },
+      { name: "Castine, ME", country: "USA 🇺🇸" },
+      { name: "Toledo", country: "Spain 🇪🇸" },
+      { name: "Versailles", country: "France 🇫🇷" },
+      { name: "St. Andrew's", country: "Scotland 🏴" },
+      { name: "Gainesville, FL", country: "USA 🇺🇸" },
+      { name: "Colonia del Sacremento", country: "Uruguay 🇺🇾" },
+      { name: "Corolla, NC", country: "USA 🇺🇸" },
+      { name: "Aveiro", country: "Portugal 🇵🇹" },
+      { name: "Cambridge", country: "England 🏴" },
+      { name: "Olmue", country: "Chile 🇨🇱" },
+      { name: "Hanover, NH", country: "USA 🇺🇸" },
+      { name: "Dornbirn", country: "Austria 🇦🇹" },
+      { name: "Deep Creek, MD", country: "USA 🇺🇸" },
+      { name: "Valparaiso", country: "Chile 🇨🇱" },
+      { name: "North Conway, NH", country: "USA 🇺🇸" },
+      { name: "Siem Reap", country: "Cambodia 🇰🇭" },
+      { name: "Tinghir", country: "Morocco 🇲🇦" },
+    ],
+  },
+];

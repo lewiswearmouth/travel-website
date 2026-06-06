@@ -10,6 +10,8 @@ import { Layer, MapRef, Marker, Source } from '@vis.gl/react-mapbox';
 
 import { COUNTRY_PHOTO_ALBUMS, CountryPhoto } from '@/lib/photos';
 import {
+  CITY_RANKING_GROUPS,
+  CityRankingGroup,
   LOCATION_BY_ID,
   LOCATIONS,
   MODE_STYLES,
@@ -21,7 +23,9 @@ const Map = dynamic(() => import('@vis.gl/react-mapbox').then((m) => m.Map), {
   ssr: false,
 });
 
-type ActiveView = 'globe' | 'gallery';
+const CITY_RANKINGS_STORAGE_KEY = 'travel-city-rankings-v2';
+
+type ActiveView = 'globe' | 'gallery' | 'rankings';
 
 type GalleryPhoto = CountryPhoto & {
   src: string;
@@ -62,6 +66,91 @@ function captionFromFile(file: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function rankingAccent(groupId: CityRankingGroup['id']) {
+  return groupId === 'major'
+    ? {
+      border: 'border-[#9E5D3B]',
+      soft: 'bg-[#FFF2E8]',
+      solid: 'bg-[#A34F2E]',
+      text: 'text-[#7A371E]',
+      hover: 'hover:bg-[#FFF2E8]',
+    }
+    : {
+      border: 'border-[#2B7471]',
+      soft: 'bg-[#E8F5F2]',
+      solid: 'bg-[#2B7471]',
+      text: 'text-[#215B58]',
+      hover: 'hover:bg-[#E8F5F2]',
+    };
+}
+
+function rankingBadgeClass(index: number) {
+  if (index === 0) return 'border-[#A87821] bg-[#FFF0C8] text-[#6D4810]';
+  if (index === 1) return 'border-[#8A9298] bg-[#EEF1F2] text-[#4E565B]';
+  if (index === 2) return 'border-[#A45C35] bg-[#F7DFD1] text-[#74391E]';
+  return 'border-[#D8D0C3] bg-[#F7F4ED] text-[#69746E]';
+}
+
+const COUNTRY_FLAG_CODES: Record<string, string> = {
+  Albania: 'al',
+  Argentina: 'ar',
+  Austria: 'at',
+  'Bosnia and Herzegovina': 'ba',
+  Cambodia: 'kh',
+  Chile: 'cl',
+  Croatia: 'hr',
+  England: 'gb-eng',
+  France: 'fr',
+  Germany: 'de',
+  Hungary: 'hu',
+  Ireland: 'ie',
+  Italy: 'it',
+  Monaco: 'mc',
+  Montenegro: 'me',
+  Morocco: 'ma',
+  Peru: 'pe',
+  Portugal: 'pt',
+  Scotland: 'gb-sct',
+  Slovenia: 'si',
+  Spain: 'es',
+  Switzerland: 'ch',
+  Thailand: 'th',
+  Uruguay: 'uy',
+  USA: 'us',
+  Vietnam: 'vn',
+};
+
+function countryName(country: string) {
+  return country
+    .replace(/\p{Regional_Indicator}|\p{Emoji_Presentation}|\uFE0F|\u200D|[\u{E0020}-\u{E007F}]/gu, '')
+    .trim();
+}
+
+function CountryFlag({ country }: { country: string }) {
+  const name = countryName(country);
+  const code = COUNTRY_FLAG_CODES[name];
+
+  if (!code) return null;
+
+  return (
+    <span
+      className="inline-block h-4 w-6 shrink-0 rounded-sm border border-black/10 bg-cover bg-center shadow-sm"
+      style={{ backgroundImage: `url(https://flagcdn.com/w40/${code}.png)` }}
+      role="img"
+      aria-label={`${name} flag`}
+    />
+  );
+}
+
+function CountryLabel({ country }: { country: string }) {
+  return (
+    <span className="inline-flex min-w-0 items-center gap-1.5">
+      <CountryFlag country={country} />
+      <span className="truncate">{countryName(country)}</span>
+    </span>
+  );
+}
+
 export default function Home() {
   const [activeView, setActiveView] = useState<ActiveView>('globe');
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
@@ -70,6 +159,8 @@ export default function Home() {
   const [expandedPhotoIndex, setExpandedPhotoIndex] = useState<number | null>(null);
   const [hoveredRouteId, setHoveredRouteId] = useState<string | null>(null);
   const [mapRef, setMapRef] = useState<MapRef | null>(null);
+  const [rankingGroups, setRankingGroups] = useState<CityRankingGroup[]>(CITY_RANKING_GROUPS);
+  const [rankingsHydrated, setRankingsHydrated] = useState(false);
 
   const selectedLocation = selectedLocationId ? LOCATION_BY_ID[selectedLocationId] : null;
   const selectedRoutes = useMemo(
@@ -156,8 +247,29 @@ export default function Home() {
     expandedPhotoIndex !== null ? galleryPhotos[expandedPhotoIndex] : null;
 
   useEffect(() => {
-    setExpandedPhotoIndex(null);
-  }, [selectedCountry, selectedGalleryLocationId]);
+    const hydrationTimer = window.setTimeout(() => {
+      const savedRankings = window.localStorage.getItem(CITY_RANKINGS_STORAGE_KEY);
+      if (savedRankings) {
+        try {
+          const parsed = JSON.parse(savedRankings) as CityRankingGroup[];
+          if (Array.isArray(parsed) && parsed.length === CITY_RANKING_GROUPS.length) {
+            setRankingGroups(parsed);
+          }
+        } catch {
+          window.localStorage.removeItem(CITY_RANKINGS_STORAGE_KEY);
+        }
+      }
+
+      setRankingsHydrated(true);
+    }, 0);
+
+    return () => window.clearTimeout(hydrationTimer);
+  }, []);
+
+  useEffect(() => {
+    if (!rankingsHydrated) return;
+    window.localStorage.setItem(CITY_RANKINGS_STORAGE_KEY, JSON.stringify(rankingGroups));
+  }, [rankingGroups, rankingsHydrated]);
 
   useEffect(() => {
     if (activeView !== 'globe' || !mapRef || !selectedLocation) return;
@@ -197,6 +309,61 @@ export default function Home() {
 
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
+  function updateRankingCity(
+    groupId: CityRankingGroup['id'],
+    index: number,
+    field: 'name' | 'country',
+    value: string
+  ) {
+    setRankingGroups((groups) =>
+      groups.map((group) =>
+        group.id === groupId
+          ? {
+            ...group,
+            cities: group.cities.map((city, cityIndex) =>
+              cityIndex === index ? { ...city, [field]: value } : city
+            ),
+          }
+          : group
+      )
+    );
+  }
+
+  function moveRankingCity(groupId: CityRankingGroup['id'], index: number, direction: -1 | 1) {
+    setRankingGroups((groups) =>
+      groups.map((group) => {
+        if (group.id !== groupId) return group;
+
+        const nextIndex = index + direction;
+        if (nextIndex < 0 || nextIndex >= group.cities.length) return group;
+
+        const cities = [...group.cities];
+        [cities[index], cities[nextIndex]] = [cities[nextIndex], cities[index]];
+        return { ...group, cities };
+      })
+    );
+  }
+
+  function addRankingCity(groupId: CityRankingGroup['id']) {
+    setRankingGroups((groups) =>
+      groups.map((group) =>
+        group.id === groupId
+          ? { ...group, cities: [...group.cities, { name: 'New place', country: '' }] }
+          : group
+      )
+    );
+  }
+
+  function removeRankingCity(groupId: CityRankingGroup['id'], index: number) {
+    setRankingGroups((groups) =>
+      groups.map((group) =>
+        group.id === groupId
+          ? { ...group, cities: group.cities.filter((_, cityIndex) => cityIndex !== index) }
+          : group
+      )
+    );
+  }
+
   return (
     <main
       className={`bg-[#F7F4ED] text-[#18211F] ${activeView === 'globe' ? 'h-screen overflow-hidden' : 'min-h-screen'
@@ -214,8 +381,8 @@ export default function Home() {
               </h1>
             </div>
 
-            <div className="grid w-full grid-cols-2 rounded-lg border border-[#CFC7BA] bg-white p-1 shadow-sm md:w-[280px]">
-              {(['globe', 'gallery'] as ActiveView[]).map((view) => (
+            <div className="grid w-full grid-cols-3 rounded-lg border border-[#CFC7BA] bg-white p-1 shadow-sm md:w-[420px]">
+              {(['globe', 'gallery', 'rankings'] as ActiveView[]).map((view) => (
                 <button
                   key={view}
                   type="button"
@@ -231,7 +398,7 @@ export default function Home() {
                     : 'text-[#4E5A55] hover:bg-[#F0ECE4]'
                     }`}
                 >
-                  {view === 'globe' ? 'Globe' : 'Gallery'}
+                  {view === 'globe' ? 'Globe' : view === 'gallery' ? 'Gallery' : 'Rankings'}
                 </button>
               ))}
             </div>
@@ -244,6 +411,7 @@ export default function Home() {
             <div>
               <strong className="text-[#1C2A26]">{LOCATIONS.length}</strong> places
             </div>
+
           </div>
         </div>
       </header>
@@ -410,6 +578,7 @@ export default function Home() {
                     onClick={() => {
                       setSelectedCountry(selectedLocation.country);
                       setSelectedGalleryLocationId(selectedLocation.id);
+                      setExpandedPhotoIndex(null);
                       setActiveView('gallery');
                     }}
                     className="w-full rounded-md bg-[#1F5E55] px-4 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-[#174B44]"
@@ -427,7 +596,7 @@ export default function Home() {
 
           </aside>
         </section>
-      ) : (
+      ) : activeView === 'gallery' ? (
         <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 py-5 sm:px-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-8">
           <aside className="rounded-lg border border-[#CFC7BA] bg-[#FDFBF6] p-3 shadow-sm lg:sticky lg:top-5 lg:self-start">
             <h2 className="px-2 pb-2 text-sm font-semibold uppercase tracking-[0.14em] text-[#69746E]">
@@ -441,6 +610,7 @@ export default function Home() {
                   onClick={() => {
                     setSelectedCountry(country.country);
                     setSelectedGalleryLocationId(null);
+                    setExpandedPhotoIndex(null);
                   }}
                   className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition ${selectedCountry === country.country
                     ? 'bg-[#1F5E55] text-white'
@@ -517,7 +687,10 @@ export default function Home() {
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
                   type="button"
-                  onClick={() => setSelectedGalleryLocationId(null)}
+                  onClick={() => {
+                    setSelectedGalleryLocationId(null);
+                    setExpandedPhotoIndex(null);
+                  }}
                   className={`rounded-md border px-3 py-2 text-sm font-semibold shadow-sm transition ${selectedGalleryLocationId === null
                     ? 'border-[#1F5E55] bg-[#1F5E55] text-white'
                     : 'border-[#CFC7BA] bg-white text-[#34413C] hover:bg-[#F0ECE4]'
@@ -529,7 +702,10 @@ export default function Home() {
                   <button
                     key={location.id}
                     type="button"
-                    onClick={() => setSelectedGalleryLocationId(location.id)}
+                    onClick={() => {
+                      setSelectedGalleryLocationId(location.id);
+                      setExpandedPhotoIndex(null);
+                    }}
                     className={`rounded-md border px-3 py-2 text-sm font-semibold shadow-sm transition ${selectedGalleryLocationId === location.id
                       ? 'border-[#1F5E55] bg-[#1F5E55] text-white'
                       : 'border-[#CFC7BA] bg-white text-[#34413C] hover:bg-[#F0ECE4]'
@@ -594,6 +770,200 @@ export default function Home() {
                 </div>
               )}
             </div>
+          </div>
+        </section>
+      ) : (
+        <section className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 lg:px-8">
+          <div className="mb-5 overflow-hidden rounded-lg border border-[#CFC7BA] bg-[#FDFBF6] shadow-sm">
+            <div className="grid gap-0 lg:grid-cols-[minmax(0,1fr)_360px]">
+              <div className="border-b border-[#E0D8CC] bg-[#16322F] p-5 text-white lg:border-b-0 lg:border-r">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#B8D4CC]">
+                  City rankings
+                </p>
+                <h2 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">
+                  Favorite places list
+                </h2>
+                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                  {rankingGroups.map((group) => (
+                    <div key={group.id} className="rounded-lg border border-white/15 bg-white/10 p-3">
+                      <div className="text-2xl font-semibold">{group.cities.length}</div>
+                      <div className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-white/70">
+                        {group.id === 'major' ? 'Major' : 'Small'}
+                      </div>
+                    </div>
+                  ))}
+                  <div className="rounded-lg border border-white/15 bg-white/10 p-3">
+                    <div className="text-2xl font-semibold">
+                      {rankingGroups.reduce((total, group) => total + group.cities.length, 0)}
+                    </div>
+                    <div className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-white/70">
+                      Total
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid content-between gap-4 bg-[#EFE8DC] p-5">
+                <div className="grid gap-3">
+                  {rankingGroups.map((group) => {
+                    const accent = rankingAccent(group.id);
+                    const leader = group.cities[0];
+
+                    return (
+                      <div key={group.id} className={`rounded-lg border ${accent.border} bg-white p-3`}>
+                        <p className={`text-xs font-semibold uppercase tracking-[0.12em] ${accent.text}`}>
+                          Current number one
+                        </p>
+                        <div className="mt-2 flex items-baseline justify-between gap-3">
+                          <span className="text-lg font-semibold text-[#16221F]">{leader?.name}</span>
+                          {leader && (
+                            <span className="text-sm text-[#52605A]">
+                              <CountryLabel country={leader.country} />
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setRankingGroups(CITY_RANKING_GROUPS)}
+                  className="w-full rounded-md border border-[#CFC7BA] bg-white px-3 py-2 text-sm font-semibold text-[#34413C] shadow-sm transition hover:bg-[#FDFBF6]"
+                >
+                  Reset rankings
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-5 xl:grid-cols-2">
+            {rankingGroups.map((group) => {
+              const accent = rankingAccent(group.id);
+              const topCities = group.cities.slice(0, 3);
+
+              return (
+                <div
+                  key={group.id}
+                  className={`overflow-hidden rounded-lg border ${accent.border} bg-[#FDFBF6] shadow-sm`}
+                >
+                  <div className={`${accent.soft} border-b border-current/10 p-4`}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className={`text-xs font-semibold uppercase tracking-[0.14em] ${accent.text}`}>
+                          {group.subtitle}
+                        </p>
+                        <h3 className="mt-1 text-2xl font-semibold text-[#16221F]">
+                          {group.title}
+                        </h3>
+                      </div>
+                      <span className={`${accent.solid} rounded-md px-3 py-1 text-sm font-semibold text-white`}>
+                        {group.cities.length}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 grid gap-2 sm:grid-cols-3">
+                      {topCities.map((city, index) => (
+                        <div
+                          key={`${group.id}-top-${city.name}`}
+                          className="min-w-0 rounded-lg border border-white/70 bg-white/80 p-3 shadow-sm"
+                        >
+                          <div className={`inline-flex rounded-md border px-2 py-1 text-xs font-semibold ${rankingBadgeClass(index)}`}>
+                            #{index + 1}
+                          </div>
+                          <div className="mt-2 truncate text-sm font-semibold text-[#16221F]">
+                            {city.name}
+                          </div>
+                          <div className="mt-1 text-xs text-[#69746E]">
+                            <CountryLabel country={city.country} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 p-4">
+                    {group.cities.map((city, index) => (
+                      <div
+                        key={`${group.id}-${index}-${city.name}`}
+                        className={`grid gap-2 rounded-lg border bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:grid-cols-[52px_minmax(0,1fr)_104px] sm:items-center ${index < 3 ? accent.border : 'border-[#DDD5CA]'
+                          }`}
+                      >
+                        <div className={`grid h-11 w-full place-items-center rounded-md border text-sm font-semibold tabular-nums sm:w-11 ${rankingBadgeClass(index)}`}>
+                          {index + 1}
+                        </div>
+
+                        <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_160px]">
+                          <input
+                            type="text"
+                            value={city.name}
+                            onChange={(event) =>
+                              updateRankingCity(group.id, index, 'name', event.target.value)
+                            }
+                            className="min-w-0 rounded-md border border-[#D8D0C3] bg-[#FDFBF6] px-3 py-2 text-sm font-semibold text-[#16221F] outline-none transition focus:border-[#1F5E55] focus:bg-white"
+                            aria-label={`${group.title} rank ${index + 1} city`}
+                          />
+                          <div className="relative min-w-0">
+                            <span className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2">
+                              <CountryFlag country={city.country} />
+                            </span>
+                            <input
+                              type="text"
+                              value={countryName(city.country)}
+                              onChange={(event) =>
+                                updateRankingCity(group.id, index, 'country', event.target.value)
+                              }
+                              className="w-full min-w-0 rounded-md border border-[#D8D0C3] bg-[#FDFBF6] py-2 pl-12 pr-3 text-sm text-[#52605A] outline-none transition focus:border-[#1F5E55] focus:bg-white"
+                              aria-label={`${group.title} rank ${index + 1} country`}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-1">
+                          <button
+                            type="button"
+                            onClick={() => moveRankingCity(group.id, index, -1)}
+                            disabled={index === 0}
+                            className="grid h-10 place-items-center rounded-md border border-[#D8D0C3] bg-[#FDFBF6] text-sm font-semibold text-[#34413C] transition hover:bg-[#F0ECE4] disabled:cursor-not-allowed disabled:opacity-35"
+                            aria-label={`Move ${city.name} up`}
+                          >
+                            ↑
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => moveRankingCity(group.id, index, 1)}
+                            disabled={index === group.cities.length - 1}
+                            className="grid h-10 place-items-center rounded-md border border-[#D8D0C3] bg-[#FDFBF6] text-sm font-semibold text-[#34413C] transition hover:bg-[#F0ECE4] disabled:cursor-not-allowed disabled:opacity-35"
+                            aria-label={`Move ${city.name} down`}
+                          >
+                            ↓
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeRankingCity(group.id, index)}
+                            className="grid h-10 place-items-center rounded-md border border-[#E0C5BA] bg-[#FFF7F3] text-sm font-semibold text-[#8A3324] transition hover:bg-[#F7E7E0]"
+                            aria-label={`Remove ${city.name}`}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="border-t border-[#E0D8CC] bg-[#F7F4ED] p-4">
+                    <button
+                      type="button"
+                      onClick={() => addRankingCity(group.id)}
+                      className={`w-full rounded-md border ${accent.border} bg-white px-3 py-2 text-sm font-semibold ${accent.text} shadow-sm transition ${accent.hover}`}
+                    >
+                      + Add place
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </section>
       )}
