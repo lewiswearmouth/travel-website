@@ -23,8 +23,6 @@ const Map = dynamic(() => import('@vis.gl/react-mapbox').then((m) => m.Map), {
   ssr: false,
 });
 
-const CITY_RANKINGS_STORAGE_KEY = 'travel-city-rankings-v2';
-
 type ActiveView = 'globe' | 'gallery' | 'rankings';
 
 type GalleryPhoto = CountryPhoto & {
@@ -73,14 +71,12 @@ function rankingAccent(groupId: CityRankingGroup['id']) {
       soft: 'bg-[#FFF2E8]',
       solid: 'bg-[#A34F2E]',
       text: 'text-[#7A371E]',
-      hover: 'hover:bg-[#FFF2E8]',
     }
     : {
       border: 'border-[#2B7471]',
       soft: 'bg-[#E8F5F2]',
       solid: 'bg-[#2B7471]',
       text: 'text-[#215B58]',
-      hover: 'hover:bg-[#E8F5F2]',
     };
 }
 
@@ -159,8 +155,6 @@ export default function Home() {
   const [expandedPhotoIndex, setExpandedPhotoIndex] = useState<number | null>(null);
   const [hoveredRouteId, setHoveredRouteId] = useState<string | null>(null);
   const [mapRef, setMapRef] = useState<MapRef | null>(null);
-  const [rankingGroups, setRankingGroups] = useState<CityRankingGroup[]>(CITY_RANKING_GROUPS);
-  const [rankingsHydrated, setRankingsHydrated] = useState(false);
 
   const selectedLocation = selectedLocationId ? LOCATION_BY_ID[selectedLocationId] : null;
   const selectedRoutes = useMemo(
@@ -247,31 +241,6 @@ export default function Home() {
     expandedPhotoIndex !== null ? galleryPhotos[expandedPhotoIndex] : null;
 
   useEffect(() => {
-    const hydrationTimer = window.setTimeout(() => {
-      const savedRankings = window.localStorage.getItem(CITY_RANKINGS_STORAGE_KEY);
-      if (savedRankings) {
-        try {
-          const parsed = JSON.parse(savedRankings) as CityRankingGroup[];
-          if (Array.isArray(parsed) && parsed.length === CITY_RANKING_GROUPS.length) {
-            setRankingGroups(parsed);
-          }
-        } catch {
-          window.localStorage.removeItem(CITY_RANKINGS_STORAGE_KEY);
-        }
-      }
-
-      setRankingsHydrated(true);
-    }, 0);
-
-    return () => window.clearTimeout(hydrationTimer);
-  }, []);
-
-  useEffect(() => {
-    if (!rankingsHydrated) return;
-    window.localStorage.setItem(CITY_RANKINGS_STORAGE_KEY, JSON.stringify(rankingGroups));
-  }, [rankingGroups, rankingsHydrated]);
-
-  useEffect(() => {
     if (activeView !== 'globe' || !mapRef || !selectedLocation) return;
 
     mapRef.flyTo({
@@ -308,61 +277,6 @@ export default function Home() {
   }, [expandedPhoto, galleryPhotos.length]);
 
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
-
-  function updateRankingCity(
-    groupId: CityRankingGroup['id'],
-    index: number,
-    field: 'name' | 'country',
-    value: string
-  ) {
-    setRankingGroups((groups) =>
-      groups.map((group) =>
-        group.id === groupId
-          ? {
-            ...group,
-            cities: group.cities.map((city, cityIndex) =>
-              cityIndex === index ? { ...city, [field]: value } : city
-            ),
-          }
-          : group
-      )
-    );
-  }
-
-  function moveRankingCity(groupId: CityRankingGroup['id'], index: number, direction: -1 | 1) {
-    setRankingGroups((groups) =>
-      groups.map((group) => {
-        if (group.id !== groupId) return group;
-
-        const nextIndex = index + direction;
-        if (nextIndex < 0 || nextIndex >= group.cities.length) return group;
-
-        const cities = [...group.cities];
-        [cities[index], cities[nextIndex]] = [cities[nextIndex], cities[index]];
-        return { ...group, cities };
-      })
-    );
-  }
-
-  function addRankingCity(groupId: CityRankingGroup['id']) {
-    setRankingGroups((groups) =>
-      groups.map((group) =>
-        group.id === groupId
-          ? { ...group, cities: [...group.cities, { name: 'New place', country: '' }] }
-          : group
-      )
-    );
-  }
-
-  function removeRankingCity(groupId: CityRankingGroup['id'], index: number) {
-    setRankingGroups((groups) =>
-      groups.map((group) =>
-        group.id === groupId
-          ? { ...group, cities: group.cities.filter((_, cityIndex) => cityIndex !== index) }
-          : group
-      )
-    );
-  }
 
   return (
     <main
@@ -411,7 +325,12 @@ export default function Home() {
             <div>
               <strong className="text-[#1C2A26]">{LOCATIONS.length}</strong> places
             </div>
-
+            <div>
+              <strong className="text-[#1C2A26]">
+                {CITY_RANKING_GROUPS.reduce((total, group) => total + group.cities.length, 0)}
+              </strong>{' '}
+              ranked places
+            </div>
           </div>
         </div>
       </header>
@@ -784,7 +703,7 @@ export default function Home() {
                   Favorite places list
                 </h2>
                 <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                  {rankingGroups.map((group) => (
+                  {CITY_RANKING_GROUPS.map((group) => (
                     <div key={group.id} className="rounded-lg border border-white/15 bg-white/10 p-3">
                       <div className="text-2xl font-semibold">{group.cities.length}</div>
                       <div className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-white/70">
@@ -794,7 +713,7 @@ export default function Home() {
                   ))}
                   <div className="rounded-lg border border-white/15 bg-white/10 p-3">
                     <div className="text-2xl font-semibold">
-                      {rankingGroups.reduce((total, group) => total + group.cities.length, 0)}
+                      {CITY_RANKING_GROUPS.reduce((total, group) => total + group.cities.length, 0)}
                     </div>
                     <div className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-white/70">
                       Total
@@ -805,7 +724,7 @@ export default function Home() {
 
               <div className="grid content-between gap-4 bg-[#EFE8DC] p-5">
                 <div className="grid gap-3">
-                  {rankingGroups.map((group) => {
+                  {CITY_RANKING_GROUPS.map((group) => {
                     const accent = rankingAccent(group.id);
                     const leader = group.cities[0];
 
@@ -827,19 +746,12 @@ export default function Home() {
                   })}
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setRankingGroups(CITY_RANKING_GROUPS)}
-                  className="w-full rounded-md border border-[#CFC7BA] bg-white px-3 py-2 text-sm font-semibold text-[#34413C] shadow-sm transition hover:bg-[#FDFBF6]"
-                >
-                  Reset rankings
-                </button>
               </div>
             </div>
           </div>
 
           <div className="grid gap-5 xl:grid-cols-2">
-            {rankingGroups.map((group) => {
+            {CITY_RANKING_GROUPS.map((group) => {
               const accent = rankingAccent(group.id);
               const topCities = group.cities.slice(0, 3);
 
@@ -887,79 +799,23 @@ export default function Home() {
                     {group.cities.map((city, index) => (
                       <div
                         key={`${group.id}-${index}-${city.name}`}
-                        className={`grid gap-2 rounded-lg border bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:grid-cols-[52px_minmax(0,1fr)_104px] sm:items-center ${index < 3 ? accent.border : 'border-[#DDD5CA]'
+                        className={`grid gap-3 rounded-lg border bg-white p-2 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:grid-cols-[52px_minmax(0,1fr)] sm:items-center ${index < 3 ? accent.border : 'border-[#DDD5CA]'
                           }`}
                       >
                         <div className={`grid h-11 w-full place-items-center rounded-md border text-sm font-semibold tabular-nums sm:w-11 ${rankingBadgeClass(index)}`}>
                           {index + 1}
                         </div>
 
-                        <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_160px]">
-                          <input
-                            type="text"
-                            value={city.name}
-                            onChange={(event) =>
-                              updateRankingCity(group.id, index, 'name', event.target.value)
-                            }
-                            className="min-w-0 rounded-md border border-[#D8D0C3] bg-[#FDFBF6] px-3 py-2 text-sm font-semibold text-[#16221F] outline-none transition focus:border-[#1F5E55] focus:bg-white"
-                            aria-label={`${group.title} rank ${index + 1} city`}
-                          />
-                          <div className="relative min-w-0">
-                            <span className="pointer-events-none absolute left-3 top-1/2 z-10 -translate-y-1/2">
-                              <CountryFlag country={city.country} />
-                            </span>
-                            <input
-                              type="text"
-                              value={countryName(city.country)}
-                              onChange={(event) =>
-                                updateRankingCity(group.id, index, 'country', event.target.value)
-                              }
-                              className="w-full min-w-0 rounded-md border border-[#D8D0C3] bg-[#FDFBF6] py-2 pl-12 pr-3 text-sm text-[#52605A] outline-none transition focus:border-[#1F5E55] focus:bg-white"
-                              aria-label={`${group.title} rank ${index + 1} country`}
-                            />
+                        <div className="grid min-w-0 gap-1 sm:grid-cols-[minmax(0,1fr)_190px] sm:items-center">
+                          <div className="min-w-0 rounded-md bg-[#FDFBF6] px-3 py-2 text-sm font-semibold text-[#16221F]">
+                            {city.name}
                           </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-1">
-                          <button
-                            type="button"
-                            onClick={() => moveRankingCity(group.id, index, -1)}
-                            disabled={index === 0}
-                            className="grid h-10 place-items-center rounded-md border border-[#D8D0C3] bg-[#FDFBF6] text-sm font-semibold text-[#34413C] transition hover:bg-[#F0ECE4] disabled:cursor-not-allowed disabled:opacity-35"
-                            aria-label={`Move ${city.name} up`}
-                          >
-                            ↑
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => moveRankingCity(group.id, index, 1)}
-                            disabled={index === group.cities.length - 1}
-                            className="grid h-10 place-items-center rounded-md border border-[#D8D0C3] bg-[#FDFBF6] text-sm font-semibold text-[#34413C] transition hover:bg-[#F0ECE4] disabled:cursor-not-allowed disabled:opacity-35"
-                            aria-label={`Move ${city.name} down`}
-                          >
-                            ↓
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => removeRankingCity(group.id, index)}
-                            className="grid h-10 place-items-center rounded-md border border-[#E0C5BA] bg-[#FFF7F3] text-sm font-semibold text-[#8A3324] transition hover:bg-[#F7E7E0]"
-                            aria-label={`Remove ${city.name}`}
-                          >
-                            ×
-                          </button>
+                          <div className="min-w-0 rounded-md bg-[#FDFBF6] px-3 py-2 text-sm text-[#52605A]">
+                            <CountryLabel country={city.country} />
+                          </div>
                         </div>
                       </div>
                     ))}
-                  </div>
-
-                  <div className="border-t border-[#E0D8CC] bg-[#F7F4ED] p-4">
-                    <button
-                      type="button"
-                      onClick={() => addRankingCity(group.id)}
-                      className={`w-full rounded-md border ${accent.border} bg-white px-3 py-2 text-sm font-semibold ${accent.text} shadow-sm transition ${accent.hover}`}
-                    >
-                      + Add place
-                    </button>
                   </div>
                 </div>
               );

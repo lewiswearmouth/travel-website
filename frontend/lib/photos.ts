@@ -793,6 +793,7 @@ export const COUNTRY_PHOTO_ALBUMS: Record<string, CountryPhotoAlbum> = {
       { file: "IMG_5971.jpeg", locationId: "baltimore", locationLabel: "Baltimore", caption: "June 2026" },
       { file: "IMG_7911.jpeg", locationId: "baltimore", locationLabel: "Baltimore", caption: "June 2026" },
       { file: "IMG_7907.jpeg", locationId: "baltimore", locationLabel: "Baltimore", caption: "June 2026" },
+      { file: "IMG_5973.jpeg", locationId: "baltimore", locationLabel: "Baltimore", caption: "June 2026" },
 
       { file: "IMG_1915.JPG", locationId: "seattle", locationLabel: "Seattle", caption: "April 2025" },
       { file: "IMG_1923.JPG", locationId: "seattle", locationLabel: "Seattle", caption: "April 2025" },
