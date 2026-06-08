@@ -253,6 +253,15 @@ export const LOCATIONS: Location[] = [
     coverPhoto: "/photos/united-states/RemoteMediaFile_6553986_0_2022_01_31_07_04_00.jpg"
   },
   {
+    id: "baltimore",
+    name: "Baltimore",
+    country: "United States",
+    region: "North America",
+    coords: [-76.6122, 39.2904],
+    photos: [],
+    coverPhoto: "/photos/united-states/IMG_5971.jpeg"
+  },
+  {
     id: "madrid",
     name: "Madrid",
     country: "Spain",
@@ -943,6 +952,7 @@ export const ROUTE_SEGMENTS: RouteSegment[] = [
   { id: "munich-nuremberg", origin: "munich", destination: "nuremberg", mode: "train" },
   { id: "dingle-cliffs-of-moher", origin: "dingle", destination: "cliffs-of-moher", mode: "road" },
   { id: "cliffs-of-moher-dublin", origin: "cliffs-of-moher", destination: "dublin", mode: "road" },
+  { id: "dc-baltimore", origin: "washington-dc", destination: "baltimore", mode: "road" },
 ];
 
 export const LOCATION_BY_ID = Object.fromEntries(LOCATIONS.map((location) => [location.id, location]));
